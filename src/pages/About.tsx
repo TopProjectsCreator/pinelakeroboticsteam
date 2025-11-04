@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Target, Heart, Lightbulb, Award } from "lucide-react";
+import { Compass, Lightbulb, Zap, Users, Heart, Sparkles } from "lucide-react";
 import teamCollaboration from "@/assets/team-collaboration.jpg";
 
 const About = () => {
@@ -44,17 +44,17 @@ const About = () => {
         {/* Values */}
         <section className="mb-20">
           <h2 className="text-3xl font-orbitron font-bold mb-10 text-center">Our Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="hover:shadow-glow transition-shadow">
               <CardHeader>
                 <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4">
-                  <Target className="w-6 h-6 text-primary-foreground" />
+                  <Compass className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <CardTitle>Innovation</CardTitle>
+                <CardTitle>Discovery</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Pushing boundaries and finding creative solutions to complex challenges.
+                  Exploring new ideas and pushing the boundaries of what's possible.
                 </p>
               </CardContent>
             </Card>
@@ -62,7 +62,49 @@ const About = () => {
             <Card className="hover:shadow-glow transition-shadow">
               <CardHeader>
                 <div className="w-12 h-12 bg-gradient-accent rounded-lg flex items-center justify-center mb-4">
-                  <Heart className="w-6 h-6 text-accent-foreground" />
+                  <Lightbulb className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle>Innovation</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Creating unique solutions through creative thinking and experimentation.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <CardTitle>Impact</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Making a meaningful difference in our community through STEM.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-accent rounded-lg flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle>Inclusion</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Welcoming everyone and valuing diverse perspectives and backgrounds.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4">
+                  <Heart className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <CardTitle>Teamwork</CardTitle>
               </CardHeader>
@@ -75,28 +117,14 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardHeader>
-                <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4">
-                  <Lightbulb className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <CardTitle>Learning</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Continuously improving our skills in engineering and problem-solving.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-glow transition-shadow">
-              <CardHeader>
                 <div className="w-12 h-12 bg-gradient-accent rounded-lg flex items-center justify-center mb-4">
-                  <Award className="w-6 h-6 text-accent-foreground" />
+                  <Sparkles className="w-6 h-6 text-accent-foreground" />
                 </div>
-                <CardTitle>Excellence</CardTitle>
+                <CardTitle>Fun</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Striving for the highest quality in everything we build and do.
+                  Enjoying the journey and celebrating our achievements together.
                 </p>
               </CardContent>
             </Card>
