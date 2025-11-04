@@ -10,21 +10,21 @@ const Tournaments = () => {
     location: "Beaver Lake Middle School",
     league: "Spencer",
     status: "upcoming",
-    link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM1"
+    link: "https://ftc-events.firstinspires.org/2025/USWASPM1"
   }, {
     name: "Spencer League Meet 2",
     date: "November 22, 2025",
     location: "Beaver Lake Middle School",
     league: "Spencer",
     status: "upcoming",
-    link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM2"
+    link: "https://ftc-events.firstinspires.org/2025/USWASPM2"
   }, {
     name: "Tesla League Tournament",
     date: "December 14, 2025",
     location: "Beaver Lake Middle School",
     league: "Tesla",
     status: "upcoming",
-    link: "https://ftc-events.firstinspires.org/2025/team/23442#USWATELT"
+    link: "https://ftc-events.firstinspires.org/2025/USWATELT"
   }];
   const pastSeasons = [{
     year: "2024",
