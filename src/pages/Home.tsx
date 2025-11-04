@@ -1,0 +1,133 @@
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
+import heroImage from "@/assets/hero-robotics.jpg";
+import robotDetail from "@/assets/robot-detail.jpg";
+
+const Home = () => {
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/60" />
+        </div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl animate-fade-in">
+            <div className="inline-block px-4 py-2 bg-primary/10 rounded-full mb-6">
+              <span className="text-primary font-semibold">Team 23442</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
+              WOLVERINES
+            </h1>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-8">
+              Building the future, one robot at a time. FTC robotics team from Sammamish, WA.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Link to="/about">
+                <Button size="lg" className="group">
+                  Learn About Us
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+              <Link to="/tournaments">
+                <Button size="lg" variant="outline">
+                  View Tournaments
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="text-center hover:shadow-glow transition-shadow">
+              <CardContent className="pt-8 pb-8">
+                <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Trophy className="w-8 h-8 text-primary-foreground" />
+                </div>
+                <h3 className="text-3xl font-bold mb-2">3</h3>
+                <p className="text-muted-foreground">Seasons Competing</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-glow transition-shadow">
+              <CardContent className="pt-8 pb-8">
+                <div className="w-16 h-16 bg-gradient-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Users className="w-8 h-8 text-accent-foreground" />
+                </div>
+                <h3 className="text-3xl font-bold mb-2">15+</h3>
+                <p className="text-muted-foreground">Team Members</p>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center hover:shadow-glow transition-shadow">
+              <CardContent className="pt-8 pb-8">
+                <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="w-8 h-8 text-primary-foreground" />
+                </div>
+                <h3 className="text-3xl font-bold mb-2">2</h3>
+                <p className="text-muted-foreground">League Competitions</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* About Preview */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="order-2 lg:order-1">
+              <h2 className="text-4xl font-orbitron font-bold mb-6">Who We Are</h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                The Wolverines are a dedicated FTC robotics team from Sammamish, Washington. Since our rookie year in 2023, we've been pushing the boundaries of innovation and teamwork.
+              </p>
+              <p className="text-lg text-muted-foreground mb-8">
+                Sponsored by Pine Lake Middle School, we compete in both the Spencer and Tesla leagues, bringing our passion for STEM and robotics to every competition.
+              </p>
+              <Link to="/about">
+                <Button variant="outline" size="lg" className="group">
+                  Read Our Story
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+            <div className="order-1 lg:order-2">
+              <img 
+                src={robotDetail} 
+                alt="Wolverines robot detail" 
+                className="rounded-2xl shadow-card w-full h-auto"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-primary text-primary-foreground">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-orbitron font-bold mb-6">Get in Touch</h2>
+          <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+            Interested in robotics? Want to support our team? Have questions about FTC?
+          </p>
+          <Link to="/contact">
+            <Button size="lg" variant="secondary">
+              Contact Us
+            </Button>
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Home;
