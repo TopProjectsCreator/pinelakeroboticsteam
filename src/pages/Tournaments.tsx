@@ -7,21 +7,21 @@ const Tournaments = () => {
   const upcomingEvents = [{
     name: "Spencer League Meet 1",
     date: "November 09, 2025",
-    location: "Issaquah, WA",
+    location: "Beaver Lake Middle School",
     league: "Spencer",
     status: "upcoming",
     link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM1"
   }, {
     name: "Spencer League Meet 2",
     date: "November 22, 2025",
-    location: "Issaquah, WA",
+    location: "Beaver Lake Middle School",
     league: "Spencer",
     status: "upcoming",
     link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM2"
   }, {
     name: "Tesla League Tournament",
-    date: "TBA",
-    location: "Washington State",
+    date: "December 14, 2025",
+    location: "Beaver Lake Middle School",
     league: "Tesla",
     status: "upcoming",
     link: "https://ftc-events.firstinspires.org/2025/team/23442#USWATELT"
