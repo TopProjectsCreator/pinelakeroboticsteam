@@ -62,9 +62,7 @@ const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Wolverines Team 23442. All rights reserved.</p>
-          <p className="mt-2 text-sm">
-            Our school is Pine Lake Middle School, The home of the wolverines
-          </p>
+          <p className="mt-2 text-sm">Pine Lake Middle School, The home of the wolverines!</p>
         </div>
       </div>
     </footer>;
