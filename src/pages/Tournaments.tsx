@@ -2,50 +2,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Trophy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 const Tournaments = () => {
-  const upcomingEvents = [
-    {
-      name: "Spencer League Meet 1",
-      date: "November 09, 2025",
-      location: "Issaquah, WA",
-      league: "Spencer",
-      status: "upcoming",
-      link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM1"
-    },
-    {
-      name: "Spencer League Meet 2",
-      date: "November 22, 2025",
-      location: "Issaquah, WA",
-      league: "Spencer",
-      status: "upcoming",
-      link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM2"
-    },
-    {
-      name: "Tesla League Tournament",
-      date: "TBA",
-      location: "Washington State",
-      league: "Tesla",
-      status: "upcoming",
-      link: "https://ftc-events.firstinspires.org/2025/team/23442#USWATELT"
-    }
-  ];
-
-  const pastSeasons = [
-    {
-      year: "2024",
-      season: "INTO THE DEEP",
-      achievements: ["Competed in regional tournaments", "Advanced autonomous programming"]
-    },
-    {
-      year: "2023",
-      season: "CENTERSTAGE",
-      achievements: ["Rookie year", "Established team foundation", "First competition experience"]
-    }
-  ];
-
-  return (
-    <div className="min-h-screen py-20">
+  const upcomingEvents = [{
+    name: "Spencer League Meet 1",
+    date: "November 09, 2025",
+    location: "Issaquah, WA",
+    league: "Spencer",
+    status: "upcoming",
+    link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM1"
+  }, {
+    name: "Spencer League Meet 2",
+    date: "November 22, 2025",
+    location: "Issaquah, WA",
+    league: "Spencer",
+    status: "upcoming",
+    link: "https://ftc-events.firstinspires.org/2025/team/23442#USWASPM2"
+  }, {
+    name: "Tesla League Tournament",
+    date: "TBA",
+    location: "Washington State",
+    league: "Tesla",
+    status: "upcoming",
+    link: "https://ftc-events.firstinspires.org/2025/team/23442#USWATELT"
+  }];
+  const pastSeasons = [{
+    year: "2024",
+    season: "INTO THE DEEP",
+    achievements: ["Competed in regional tournaments", "Advanced autonomous programming"]
+  }, {
+    year: "2023",
+    season: "CENTERSTAGE",
+    achievements: ["Rookie year", "Established team foundation", "First competition experience"]
+  }];
+  return <div className="min-h-screen py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
@@ -106,7 +95,7 @@ const Tournaments = () => {
                     <span className="font-semibold">2023</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Sponsor:</span>
+                    <span className="text-muted-foreground">School:</span>
                     <span className="font-semibold">Pine Lake MS</span>
                   </div>
                 </div>
@@ -119,8 +108,7 @@ const Tournaments = () => {
         <section className="mb-16">
           <h2 className="text-3xl font-orbitron font-bold mb-8">Upcoming Events</h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {upcomingEvents.map((event, index) => (
-              <Card key={index} className="hover:shadow-glow transition-shadow">
+            {upcomingEvents.map((event, index) => <Card key={index} className="hover:shadow-glow transition-shadow">
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div>
@@ -142,12 +130,7 @@ const Tournaments = () => {
                       <MapPin className="w-4 h-4" />
                       <span>{event.location}</span>
                     </div>
-                    <a 
-                      href={event.link} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="block mt-4"
-                    >
+                    <a href={event.link} target="_blank" rel="noopener noreferrer" className="block mt-4">
                       <Button variant="outline" size="sm" className="w-full group">
                         Event Details
                         <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -155,8 +138,7 @@ const Tournaments = () => {
                     </a>
                   </div>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </section>
 
@@ -164,8 +146,7 @@ const Tournaments = () => {
         <section>
           <h2 className="text-3xl font-orbitron font-bold mb-8">Past Seasons</h2>
           <div className="space-y-6">
-            {pastSeasons.map((season, index) => (
-              <Card key={index} className="hover:shadow-glow transition-shadow">
+            {pastSeasons.map((season, index) => <Card key={index} className="hover:shadow-glow transition-shadow">
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div>
@@ -178,21 +159,16 @@ const Tournaments = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {season.achievements.map((achievement, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
+                    {season.achievements.map((achievement, idx) => <li key={idx} className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-primary rounded-full" />
                         <span className="text-muted-foreground">{achievement}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </section>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Tournaments;
