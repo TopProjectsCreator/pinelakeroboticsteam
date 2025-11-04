@@ -4,16 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-robotics.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
-
 const Home = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        >
+        <div className="absolute inset-0 bg-cover bg-center" style={{
+        backgroundImage: `url(${heroImage})`
+      }}>
           <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/60" />
         </div>
         
@@ -64,7 +61,7 @@ const Home = () => {
                 <div className="w-16 h-16 bg-gradient-accent rounded-full flex items-center justify-center mx-auto mb-4">
                   <Users className="w-8 h-8 text-accent-foreground" />
                 </div>
-                <h3 className="text-3xl font-bold mb-2">15+</h3>
+                <h3 className="text-3xl font-bold mb-2">10</h3>
                 <p className="text-muted-foreground">Team Members</p>
               </CardContent>
             </Card>
@@ -102,11 +99,7 @@ const Home = () => {
               </Link>
             </div>
             <div className="order-1 lg:order-2">
-              <img 
-                src={robotDetail} 
-                alt="Wolverines robot detail" 
-                className="rounded-2xl shadow-card w-full h-auto"
-              />
+              <img src={robotDetail} alt="Wolverines robot detail" className="rounded-2xl shadow-card w-full h-auto" />
             </div>
           </div>
         </div>
@@ -126,8 +119,6 @@ const Home = () => {
           </Link>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
