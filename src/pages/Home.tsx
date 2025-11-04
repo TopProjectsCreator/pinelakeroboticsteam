@@ -19,9 +19,12 @@ const Home = () => {
             <div className="inline-block px-4 py-2 bg-primary/10 rounded-full mb-6">
               <span className="text-primary font-semibold">Team 23442</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
               WOLVERINES
             </h1>
+            <p className="text-2xl md:text-3xl font-semibold mb-6 text-foreground">
+              "All Claws on Deck!"
+            </p>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8">
               Building the future, one robot at a time. FTC robotics team from Sammamish, WA.
             </p>
