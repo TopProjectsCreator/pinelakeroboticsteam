@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
-import { Mail, MapPin } from "lucide-react";
-
+import { MapPin } from "lucide-react";
 const Footer = () => {
-  return (
-    <footer className="bg-card border-t border-border mt-20">
+  return <footer className="bg-card border-t border-border mt-20">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
@@ -55,10 +53,8 @@ const Footer = () => {
                 <span>Sammamish, WA, USA</span>
               </li>
               <li className="flex items-start gap-2 text-muted-foreground">
-                <Mail className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <a href="mailto:team@wolverines23442.com" className="hover:text-primary transition-colors">
-                  team@wolverines23442.com
-                </a>
+                
+                
               </li>
             </ul>
           </div>
@@ -71,8 +67,6 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
