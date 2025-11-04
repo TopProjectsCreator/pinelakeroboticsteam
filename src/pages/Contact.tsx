@@ -57,7 +57,7 @@ const Contact = () => {
                   Sammamish, WA, USA
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Pine Lake Middle School
+                  PLMS
                 </p>
               </CardContent>
             </Card>

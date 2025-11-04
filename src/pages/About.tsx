@@ -30,7 +30,7 @@ const About = () => {
           <h2 className="text-3xl font-orbitron font-bold mb-6">Our Story</h2>
           <div className="space-y-4 text-lg text-muted-foreground">
             <p>
-              Founded in 2023, the Wolverines (Team 23442) emerged from Pine Lake Middle School in Sammamish, Washington, with a mission to explore the exciting world of robotics and STEM education.
+              Founded in 2023, the Wolverines (Team 23442) emerged from PLMS in Sammamish, Washington, with a mission to explore the exciting world of robotics and STEM education.
             </p>
             <p>
               As a rookie team, we quickly learned that success in FTC robotics requires more than just building robots—it demands collaboration, innovation, critical thinking, and gracious professionalism. These values have become the foundation of our team culture.

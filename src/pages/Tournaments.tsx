@@ -96,7 +96,7 @@ const Tournaments = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">School:</span>
-                    <span className="font-semibold">Pine Lake MS</span>
+                    <span className="font-semibold">PLMS</span>
                   </div>
                 </div>
               </CardContent>

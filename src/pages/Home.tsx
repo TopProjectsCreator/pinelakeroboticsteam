@@ -88,7 +88,7 @@ const Home = () => {
               <p className="text-lg text-muted-foreground mb-6">
                 The Wolverines are a dedicated FTC robotics team from Sammamish, Washington. Since our rookie year in 2023, we've been pushing the boundaries of innovation and teamwork.
               </p>
-              <p className="text-lg text-muted-foreground mb-8">From Pine Lake Middle School, we compete in both the Spencer and Tesla leagues, bringing our passion for STEM and robotics to every competition.</p>
+              <p className="text-lg text-muted-foreground mb-8">From PLMS, we compete in both the Spencer and Tesla leagues, bringing our passion for STEM and robotics to every competition.</p>
               <Link to="/about">
                 <Button variant="outline" size="lg" className="group">
                   Read Our Story
