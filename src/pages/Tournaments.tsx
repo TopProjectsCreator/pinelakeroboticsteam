@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Trophy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import teamPhoto2024 from "@/assets/team-photo-2024.jpg";
 const Tournaments = () => {
   const upcomingEvents = [{
     name: "Spencer League Meet 1",
@@ -28,7 +29,9 @@ const Tournaments = () => {
   const pastSeasons = [{
     year: "2024",
     season: "INTO THE DEEP",
-    achievements: ["Competed in regional tournaments", "Advanced autonomous programming"]
+    achievements: ["Competed in regional tournaments", "Advanced autonomous programming"],
+    image: teamPhoto2024,
+    imageAlt: "Wolverines Team 23442 - 2024 Season"
   }, {
     year: "2023",
     season: "CENTERSTAGE",
@@ -158,6 +161,15 @@ const Tournaments = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
+                  {season.image && (
+                    <div className="mb-6">
+                      <img 
+                        src={season.image} 
+                        alt={season.imageAlt} 
+                        className="rounded-lg w-full h-auto shadow-md"
+                      />
+                    </div>
+                  )}
                   <ul className="space-y-2">
                     {season.achievements.map((achievement, idx) => <li key={idx} className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-primary rounded-full" />

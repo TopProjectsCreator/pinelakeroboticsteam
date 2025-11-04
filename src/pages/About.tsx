@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Compass, Lightbulb, Zap, Users, Heart, Sparkles } from "lucide-react";
-import teamPhoto2024 from "@/assets/team-photo-2024.jpg";
+import teamCollaboration from "@/assets/team-collaboration.jpg";
 
 const About = () => {
   return (
@@ -19,8 +19,8 @@ const About = () => {
         {/* Team Image */}
         <div className="max-w-5xl mx-auto mb-16">
           <img 
-            src={teamPhoto2024} 
-            alt="Wolverines Team 23442 - Last Year's Team" 
+            src={teamCollaboration} 
+            alt="Wolverines team collaboration" 
             className="rounded-2xl shadow-card w-full h-auto"
           />
         </div>
