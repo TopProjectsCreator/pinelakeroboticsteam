@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Compass, Lightbulb, Zap, Users, Heart, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink } from "lucide-react";
 import teamCollaboration from "@/assets/team-collaboration.jpg";
 
 const About = () => {
@@ -11,9 +12,14 @@ const About = () => {
           <h1 className="text-5xl md:text-6xl font-orbitron font-bold mb-6 bg-gradient-primary bg-clip-text text-transparent">
             About the Wolverines
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-muted-foreground mb-6">
             Team 23442 - Building the future through robotics and teamwork
           </p>
+          <Button asChild variant="outline" size="lg">
+            <a href="https://ftc-events.firstinspires.org/2025/team/23442" target="_blank" rel="noopener noreferrer" className="gap-2">
+              View Team Profile <ExternalLink className="w-4 h-4" />
+            </a>
+          </Button>
         </div>
 
         {/* Team Image */}
