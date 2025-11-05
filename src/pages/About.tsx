@@ -2,6 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink } from "lucide-react";
 import teamCollaboration from "@/assets/team-collaboration.jpg";
+import maxsimPhoto from "@/assets/team/maxsim.jpg";
+import simPhoto from "@/assets/team/sim.jpg";
+import janyaPhoto from "@/assets/team/janya.jpg";
+import abhiPhoto from "@/assets/team/abhi.jpg";
+import ishaanPhoto from "@/assets/team/ishaan.jpg";
+import aryaPhoto from "@/assets/team/arya.jpg";
+import edwardPhoto from "@/assets/team/edward.jpg";
+import adityaPhoto from "@/assets/team/aditya.jpg";
+import shriyashPhoto from "@/assets/team/shriyash.jpg";
 
 const About = () => {
   return (
@@ -132,6 +141,120 @@ const About = () => {
                 <p className="text-muted-foreground">
                   Enjoying the journey and celebrating our achievements together.
                 </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Team Roster */}
+        <section className="mb-20">
+          <h2 className="text-3xl font-orbitron font-bold mb-10 text-center">Meet Our Team</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={maxsimPhoto} 
+                  alt="Maxsim - Team Captain" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Maxsim</h3>
+                <p className="text-muted-foreground">Team Captain</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={simPhoto} 
+                  alt="Sim - Lead Programmer" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Sim</h3>
+                <p className="text-muted-foreground">Lead Programmer</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={janyaPhoto} 
+                  alt="Janya - Driver" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Janya</h3>
+                <p className="text-muted-foreground">Driver</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={abhiPhoto} 
+                  alt="Abhi - Mechanical Lead" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Abhi</h3>
+                <p className="text-muted-foreground">Mechanical Lead</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={ishaanPhoto} 
+                  alt="Ishaan - CAD Designer" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Ishaan</h3>
+                <p className="text-muted-foreground">CAD Designer</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={aryaPhoto} 
+                  alt="Arya - Outreach Coordinator" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Arya</h3>
+                <p className="text-muted-foreground">Outreach Coordinator</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={edwardPhoto} 
+                  alt="Edward - Build Team" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Edward</h3>
+                <p className="text-muted-foreground">Build Team</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={adityaPhoto} 
+                  alt="Aditya - Programming Team" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Aditya</h3>
+                <p className="text-muted-foreground">Programming Team</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-glow transition-shadow">
+              <CardContent className="pt-6 text-center">
+                <img 
+                  src={shriyashPhoto} 
+                  alt="Shriyash - Engineering Notebook" 
+                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
+                />
+                <h3 className="text-xl font-bold mb-1">Shriyash</h3>
+                <p className="text-muted-foreground">Engineering Notebook</p>
               </CardContent>
             </Card>
           </div>
