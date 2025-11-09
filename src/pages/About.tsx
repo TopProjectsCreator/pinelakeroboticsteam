@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink } from "lucide-react";
+import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink, Github } from "lucide-react";
 import teamCollaboration from "@/assets/team-collaboration.jpg";
 import maxsimPhoto from "@/assets/team/maxsim.jpg";
 import simPhoto from "@/assets/team/sim.jpg";
@@ -22,11 +22,18 @@ const About = () => {
           <p className="text-xl text-muted-foreground mb-6">
             Team 23442 - Building the future through robotics and teamwork
           </p>
-          <Button asChild variant="outline" size="lg">
-            <a href="https://ftc-events.firstinspires.org/2025/team/23442" target="_blank" rel="noopener noreferrer" className="gap-2">
-              View Team Profile <ExternalLink className="w-4 h-4" />
-            </a>
-          </Button>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button asChild variant="outline" size="lg">
+              <a href="https://ftc-events.firstinspires.org/2025/team/23442" target="_blank" rel="noopener noreferrer" className="gap-2">
+                View Team Profile <ExternalLink className="w-4 h-4" />
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <a href="https://github.com/EdwardCasler/FtcRobotController" target="_blank" rel="noopener noreferrer" className="gap-2">
+                <Github className="w-4 h-4" /> View Our Code
+              </a>
+            </Button>
+          </div>
         </div>
 
         {/* Team Image */}
