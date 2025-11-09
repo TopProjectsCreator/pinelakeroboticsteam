@@ -148,7 +148,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={maxsimPhoto} alt="Maxsim - Team Captain" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Maksim</h3>
-                <p className="text-muted-foreground">Team Captain</p>
+                <p className="text-muted-foreground">Build Team</p>
               </CardContent>
             </Card>
 
@@ -156,7 +156,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={simPhoto} alt="Sim - Lead Programmer" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Sim</h3>
-                <p className="text-muted-foreground">Lead Programmer</p>
+                <p className="text-muted-foreground">Code team</p>
               </CardContent>
             </Card>
 
@@ -164,7 +164,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={janyaPhoto} alt="Janya - Driver" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Janya</h3>
-                <p className="text-muted-foreground">Driver</p>
+                <p className="text-muted-foreground">Build Team</p>
               </CardContent>
             </Card>
 
@@ -172,7 +172,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={abhiPhoto} alt="Abhi - Mechanical Lead" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Abhi</h3>
-                <p className="text-muted-foreground">Mechanical Lead</p>
+                <p className="text-muted-foreground">Code team</p>
               </CardContent>
             </Card>
 
@@ -180,7 +180,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={ishaanPhoto} alt="Ishaan - CAD Designer" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Ishaan</h3>
-                <p className="text-muted-foreground">CAD Designer</p>
+                <p className="text-muted-foreground">Code team</p>
               </CardContent>
             </Card>
 
@@ -188,7 +188,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={aryaPhoto} alt="Arya - Outreach Coordinator" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Ayra</h3>
-                <p className="text-muted-foreground">Outreach Coordinator</p>
+                <p className="text-muted-foreground">Build Team</p>
               </CardContent>
             </Card>
 
@@ -196,7 +196,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={edwardPhoto} alt="Edward - Build Team" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Edward</h3>
-                <p className="text-muted-foreground">Build Team</p>
+                <p className="text-muted-foreground">Code team</p>
               </CardContent>
             </Card>
 
@@ -204,7 +204,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={adityaPhoto} alt="Aditya - Programming Team" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Aditya</h3>
-                <p className="text-muted-foreground">Programming Team</p>
+                <p className="text-muted-foreground">Build Team</p>
               </CardContent>
             </Card>
 
@@ -212,7 +212,7 @@ const About = () => {
               <CardContent className="pt-6 text-center">
                 <img src={shriyashPhoto} alt="Shriyash - Engineering Notebook" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Shriyash</h3>
-                <p className="text-muted-foreground">Engineering Notebook</p>
+                <p className="text-muted-foreground">Build team</p>
               </CardContent>
             </Card>
           </div>
