@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -54,10 +53,12 @@ const Wiki = () => {
         );
         
         if (response.ok) {
-          const text = await response.text();
-          setContent(text);
+          const htmlText = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+          setContent(doc.body.innerHTML);
         } else {
-          setContent('# Page Not Found\n\nThe requested wiki page could not be found.');
+          setContent('<h1>Page Not Found</h1><p>The requested wiki page could not be found.</p>');
           toast({
             title: 'Page not found',
             description: 'The wiki page you requested does not exist.',
@@ -66,7 +67,7 @@ const Wiki = () => {
         }
       } catch (error) {
         console.error('Error fetching wiki content:', error);
-        setContent('# Error Loading Page\n\nThere was an error loading the wiki page.');
+        setContent('<h1>Error Loading Page</h1><p>There was an error loading the wiki page.</p>');
         toast({
           title: 'Error',
           description: 'Failed to load wiki content.',
@@ -138,9 +139,10 @@ const Wiki = () => {
                 <Skeleton className="h-4 w-2/3" />
               </div>
             ) : (
-              <div className="prose prose-slate dark:prose-invert max-w-none">
-                <ReactMarkdown>{content}</ReactMarkdown>
-              </div>
+              <div 
+                className="prose prose-slate dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
             )}
           </Card>
         </div>
