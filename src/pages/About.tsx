@@ -11,10 +11,8 @@ import aryaPhoto from "@/assets/team/arya.jpg";
 import edwardPhoto from "@/assets/team/edward.jpg";
 import adityaPhoto from "@/assets/team/aditya.jpg";
 import shriyashPhoto from "@/assets/team/shriyash.jpg";
-
 const About = () => {
-  return (
-    <div className="min-h-screen py-20">
+  return <div className="min-h-screen py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="max-w-3xl mx-auto text-center mb-16 animate-fade-in">
@@ -33,11 +31,7 @@ const About = () => {
 
         {/* Team Image */}
         <div className="max-w-5xl mx-auto mb-16">
-          <img 
-            src={teamCollaboration} 
-            alt="Wolverines team collaboration" 
-            className="rounded-2xl shadow-card w-full h-auto"
-          />
+          <img src={teamCollaboration} alt="Wolverines team collaboration" className="rounded-2xl shadow-card w-full h-auto" />
         </div>
 
         {/* Our Story */}
@@ -152,11 +146,7 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={maxsimPhoto} 
-                  alt="Maxsim - Team Captain" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={maxsimPhoto} alt="Maxsim - Team Captain" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Maxsim</h3>
                 <p className="text-muted-foreground">Team Captain</p>
               </CardContent>
@@ -164,11 +154,7 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={simPhoto} 
-                  alt="Sim - Lead Programmer" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={simPhoto} alt="Sim - Lead Programmer" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Sim</h3>
                 <p className="text-muted-foreground">Lead Programmer</p>
               </CardContent>
@@ -176,11 +162,7 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={janyaPhoto} 
-                  alt="Janya - Driver" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={janyaPhoto} alt="Janya - Driver" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Janya</h3>
                 <p className="text-muted-foreground">Driver</p>
               </CardContent>
@@ -188,11 +170,7 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={abhiPhoto} 
-                  alt="Abhi - Mechanical Lead" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={abhiPhoto} alt="Abhi - Mechanical Lead" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Abhi</h3>
                 <p className="text-muted-foreground">Mechanical Lead</p>
               </CardContent>
@@ -200,11 +178,7 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={ishaanPhoto} 
-                  alt="Ishaan - CAD Designer" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={ishaanPhoto} alt="Ishaan - CAD Designer" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Ishaan</h3>
                 <p className="text-muted-foreground">CAD Designer</p>
               </CardContent>
@@ -212,23 +186,15 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={aryaPhoto} 
-                  alt="Arya - Outreach Coordinator" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
-                <h3 className="text-xl font-bold mb-1">Arya</h3>
+                <img src={aryaPhoto} alt="Arya - Outreach Coordinator" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
+                <h3 className="text-xl font-bold mb-1">Ayra</h3>
                 <p className="text-muted-foreground">Outreach Coordinator</p>
               </CardContent>
             </Card>
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={edwardPhoto} 
-                  alt="Edward - Build Team" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={edwardPhoto} alt="Edward - Build Team" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Edward</h3>
                 <p className="text-muted-foreground">Build Team</p>
               </CardContent>
@@ -236,11 +202,7 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={adityaPhoto} 
-                  alt="Aditya - Programming Team" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={adityaPhoto} alt="Aditya - Programming Team" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Aditya</h3>
                 <p className="text-muted-foreground">Programming Team</p>
               </CardContent>
@@ -248,11 +210,7 @@ const About = () => {
 
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
-                <img 
-                  src={shriyashPhoto} 
-                  alt="Shriyash - Engineering Notebook" 
-                  className="w-32 h-32 rounded-full mx-auto mb-4 object-cover"
-                />
+                <img src={shriyashPhoto} alt="Shriyash - Engineering Notebook" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
                 <h3 className="text-xl font-bold mb-1">Shriyash</h3>
                 <p className="text-muted-foreground">Engineering Notebook</p>
               </CardContent>
@@ -310,8 +268,6 @@ const About = () => {
           </div>
         </section>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
