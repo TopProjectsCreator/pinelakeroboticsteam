@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink } from "lucide-react";
-import teamCollaboration from "@/assets/team-photo-2024.jpg";
+import teamCollaboration from "@/assets/team-collaboration.jpg";
 import maxsimPhoto from "@/assets/team/maxsim.jpg";
 import simPhoto from "@/assets/team/sim.jpg";
 import janyaPhoto from "@/assets/team/janya.jpg";
