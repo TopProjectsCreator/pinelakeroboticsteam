@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
-import heroImage from "@/assets/hero-robotics.jpg";
+import heroImage from "@/assets/robot-hero.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
 const Home = () => {
   return <div className="min-h-screen">
