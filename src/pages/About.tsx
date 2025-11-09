@@ -147,7 +147,7 @@ const About = () => {
             <Card className="hover:shadow-glow transition-shadow">
               <CardContent className="pt-6 text-center">
                 <img src={maxsimPhoto} alt="Maxsim - Team Captain" className="w-32 h-32 rounded-full mx-auto mb-4 object-cover" />
-                <h3 className="text-xl font-bold mb-1">Maxsim</h3>
+                <h3 className="text-xl font-bold mb-1">Maksim</h3>
                 <p className="text-muted-foreground">Team Captain</p>
               </CardContent>
             </Card>
