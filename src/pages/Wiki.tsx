@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { marked } from 'marked';
+import { gfmHeadingId } from 'marked-gfm-heading-id';
 import DOMPurify from 'dompurify';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -18,6 +19,7 @@ marked.setOptions({
   gfm: true,
   breaks: true,
 });
+marked.use(gfmHeadingId());
 
 const Wiki = () => {
   const { page } = useParams<{ page?: string }>();
@@ -26,24 +28,53 @@ const Wiki = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const currentPage = page || 'Home';
+  const navigate = useNavigate();
+
+  const handleContentClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    const anchor = target.closest('a') as HTMLAnchorElement | null;
+    if (!anchor) return;
+
+    const hrefAttr = anchor.getAttribute('href') || '';
+    if (hrefAttr.startsWith('#') || hrefAttr.startsWith('mailto:')) return;
+
+    const isExternal = /^https?:\/\//i.test(hrefAttr);
+    if (isExternal || anchor.target === '_blank') return;
+
+    const url = new URL(anchor.href, window.location.origin);
+    if (url.pathname.startsWith('/wiki/')) {
+      e.preventDefault();
+      navigate(url.pathname + url.search + url.hash);
+    }
+  };
 
   useEffect(() => {
     const fetchWikiPages = async () => {
-      try {
-        const response = await fetch(
-          'https://api.github.com/repos/EdwardCasler/FtcRobotController.wiki/contents/'
+      const fetchTree = async (branch: string) => {
+        const res = await fetch(
+          `https://api.github.com/repos/EdwardCasler/FtcRobotController.wiki/git/trees/${branch}?recursive=1`
         );
-        
-        if (response.ok) {
-          const files = await response.json();
-          const wikiPages = files
-            .filter((file: any) => file.name.endsWith('.md'))
-            .map((file: any) => ({
-              name: file.name.replace('.md', '').replace(/-/g, ' '),
-              path: file.name.replace('.md', ''),
-            }));
-          setPages(wikiPages);
+        if (!res.ok) throw new Error('Failed to fetch wiki tree');
+        return res.json();
+      };
+
+      try {
+        let data;
+        try {
+          data = await fetchTree('main');
+        } catch {
+          data = await fetchTree('master');
         }
+
+        const wikiPages = (data.tree || [])
+          .filter((node: any) => node.type === 'blob' && node.path.endsWith('.md'))
+          .map((node: any) => ({
+            name: node.path.replace('.md', '').replace(/-/g, ' '),
+            path: node.path.replace('.md', ''),
+          }))
+          .sort((a: WikiPage, b: WikiPage) => a.name.localeCompare(b.name));
+
+        setPages(wikiPages);
       } catch (error) {
         console.error('Error fetching wiki pages:', error);
       }
@@ -63,7 +94,26 @@ const Wiki = () => {
         if (response.ok) {
           const markdownText = await response.text();
           const htmlContent = await marked.parse(markdownText);
-          const sanitizedHtml = DOMPurify.sanitize(htmlContent);
+
+          // Rewrite links to route through /wiki and open externals in new tab
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlContent, 'text/html');
+          doc.querySelectorAll('a').forEach((a) => {
+            const href = a.getAttribute('href') || '';
+            if (!href) return;
+            if (href.startsWith('#') || href.startsWith('mailto:')) return;
+            if (/^https?:\/\//i.test(href)) {
+              a.setAttribute('target', '_blank');
+              a.setAttribute('rel', 'noopener noreferrer');
+              return;
+            }
+            let pageHref = href.replace(/^\/?wiki\//, '').replace(/\.md$/, '');
+            pageHref = pageHref.replace(/\s+/g, '-');
+            a.setAttribute('href', `/wiki/${encodeURI(pageHref)}`);
+          });
+
+          const rewrittenHtml = doc.body.innerHTML;
+          const sanitizedHtml = DOMPurify.sanitize(rewrittenHtml);
           setContent(sanitizedHtml);
         } else {
           setContent('<h1>Page Not Found</h1><p>The requested wiki page could not be found.</p>');
@@ -149,6 +199,7 @@ const Wiki = () => {
             ) : (
               <div 
                 className="prose prose-slate dark:prose-invert max-w-none"
+                onClick={handleContentClick}
                 dangerouslySetInnerHTML={{ __html: content }}
               />
             )}
