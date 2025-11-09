@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Trophy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import teamPhoto2024 from "@/assets/team-photo-2024.jpg";
+import teamCollaboration from "@/assets/team-collaboration.jpg";
 const Tournaments = () => {
   const upcomingEvents = [{
     name: "Spencer League Meet 1",
@@ -30,7 +30,7 @@ const Tournaments = () => {
     year: "2024",
     season: "INTO THE DEEP",
     achievements: ["Competed in regional tournaments", "Advanced autonomous programming"],
-    image: teamPhoto2024,
+    image: teamCollaboration,
     imageAlt: "Wolverines Team 23442 - 2024 Season"
   }, {
     year: "2023",
