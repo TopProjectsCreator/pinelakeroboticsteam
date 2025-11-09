@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,6 +12,12 @@ interface WikiPage {
   name: string;
   path: string;
 }
+
+// Configure marked for GitHub-flavored markdown
+marked.setOptions({
+  gfm: true,
+  breaks: true,
+});
 
 const Wiki = () => {
   const { page } = useParams<{ page?: string }>();
@@ -53,10 +61,10 @@ const Wiki = () => {
         );
         
         if (response.ok) {
-          const htmlText = await response.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlText, 'text/html');
-          setContent(doc.body.innerHTML);
+          const markdownText = await response.text();
+          const htmlContent = await marked.parse(markdownText);
+          const sanitizedHtml = DOMPurify.sanitize(htmlContent);
+          setContent(sanitizedHtml);
         } else {
           setContent('<h1>Page Not Found</h1><p>The requested wiki page could not be found.</p>');
           toast({
