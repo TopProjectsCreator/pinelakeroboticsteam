@@ -161,15 +161,9 @@ const Tournaments = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {season.image && (
-                    <div className="mb-6">
-                      <img 
-                        src={season.image} 
-                        alt={season.imageAlt} 
-                        className="rounded-lg w-full h-auto shadow-md"
-                      />
-                    </div>
-                  )}
+                  {season.image && <div className="mb-6">
+                      
+                    </div>}
                   <ul className="space-y-2">
                     {season.achievements.map((achievement, idx) => <li key={idx} className="flex items-center gap-2">
                         <div className="w-2 h-2 bg-primary rounded-full" />
