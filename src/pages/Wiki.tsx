@@ -31,7 +31,7 @@ const Wiki = () => {
     const fetchWikiPages = async () => {
       try {
         const response = await fetch(
-          'https://api.github.com/repos/EdwardCasler/FtcRobotController/contents?ref=wiki'
+          'https://api.github.com/repos/EdwardCasler/FtcRobotController.wiki/contents/'
         );
         
         if (response.ok) {
