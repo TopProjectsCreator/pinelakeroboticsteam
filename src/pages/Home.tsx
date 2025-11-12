@@ -1,10 +1,70 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
+import { useEffect } from "react";
 import heroImage from "@/assets/robot-hero.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
 const Home = () => {
+  useEffect(() => {
+    const faqSchema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is FTC (FIRST Tech Challenge)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "FTC (FIRST Tech Challenge) is a robotics competition for students in grades 7-12. Teams design, build, and program robots to compete in an alliance format against other teams. It combines the excitement of sport with science and technology, teaching students valuable life skills."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is the Wolverines team located?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Wolverines (Team 23442) are based in Sammamish, Washington, and compete from Pine Lake Middle School (PLMS). We participate in the Spencer and Tesla leagues."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long has the Wolverines team been competing?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Wolverines team started competing in the 2023 season as a rookie team. We are currently in our third season of FTC competition."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I join the Wolverines team?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We welcome students interested in robotics, engineering, and STEM! Contact us through our website to learn about team opportunities and requirements. Team members work on various aspects including robot design, programming, documentation, and outreach."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What leagues do the Wolverines compete in?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Wolverines compete in both the Spencer and Tesla leagues in the FTC competition structure. We participate in league meets and qualification tournaments throughout the season."
+          }
+        }
+      ]
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(faqSchema);
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
@@ -103,6 +163,48 @@ const Home = () => {
               <img src={robotDetail} alt="Wolverines robot detail" className="rounded-2xl shadow-card w-full h-auto" />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h2 className="text-4xl font-orbitron font-bold mb-6 text-center">Frequently Asked Questions</h2>
+          <p className="text-lg text-muted-foreground mb-12 text-center">
+            Learn more about the Wolverines and FTC robotics
+          </p>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-left">What is FTC (FIRST Tech Challenge)?</AccordionTrigger>
+              <AccordionContent>
+                FTC (FIRST Tech Challenge) is a robotics competition for students in grades 7-12. Teams design, build, and program robots to compete in an alliance format against other teams. It combines the excitement of sport with science and technology, teaching students valuable life skills.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-left">Where is the Wolverines team located?</AccordionTrigger>
+              <AccordionContent>
+                The Wolverines (Team 23442) are based in Sammamish, Washington, and compete from Pine Lake Middle School (PLMS). We participate in the Spencer and Tesla leagues.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="text-left">How long has the Wolverines team been competing?</AccordionTrigger>
+              <AccordionContent>
+                The Wolverines team started competing in the 2023 season as a rookie team. We are currently in our third season of FTC competition.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger className="text-left">How can I join the Wolverines team?</AccordionTrigger>
+              <AccordionContent>
+                We welcome students interested in robotics, engineering, and STEM! Contact us through our website to learn about team opportunities and requirements. Team members work on various aspects including robot design, programming, documentation, and outreach.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-5">
+              <AccordionTrigger className="text-left">What leagues do the Wolverines compete in?</AccordionTrigger>
+              <AccordionContent>
+                The Wolverines compete in both the Spencer and Tesla leagues in the FTC competition structure. We participate in league meets and qualification tournaments throughout the season.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
