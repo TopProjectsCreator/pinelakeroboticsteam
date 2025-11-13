@@ -38,14 +38,6 @@ const Home = () => {
         },
         {
           "@type": "Question",
-          "name": "How can I join the Wolverines team?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "We welcome students interested in robotics, engineering, and STEM! Contact us through our website to learn about team opportunities and requirements. Team members work on various aspects including robot design, programming, documentation, and outreach."
-          }
-        },
-        {
-          "@type": "Question",
           "name": "What leagues do the Wolverines compete in?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -193,12 +185,6 @@ const Home = () => {
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
-              <AccordionTrigger className="text-left">How can I join the Wolverines team?</AccordionTrigger>
-              <AccordionContent>
-                We welcome students interested in robotics, engineering, and STEM! Contact us through our website to learn about team opportunities and requirements. Team members work on various aspects including robot design, programming, documentation, and outreach.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-5">
               <AccordionTrigger className="text-left">What leagues do the Wolverines compete in?</AccordionTrigger>
               <AccordionContent>
                 The Wolverines compete in both the Spencer and Tesla leagues in the FTC competition structure. We participate in league meets and qualification tournaments throughout the season.
