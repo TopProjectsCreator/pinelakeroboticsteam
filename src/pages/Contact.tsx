@@ -28,7 +28,7 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('send-to-slack', {
+      const { error } = await supabase.functions.invoke('send-contact-email', {
         body: { name, email, message }
       });
 
