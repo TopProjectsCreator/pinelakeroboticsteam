@@ -11,52 +11,44 @@ const Home = () => {
     const faqSchema = {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is FTC (FIRST Tech Challenge)?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "FTC (FIRST Tech Challenge) is a robotics competition for students in grades 7-12. Teams design, build, and program robots to compete in an alliance format against other teams. It combines the excitement of sport with science and technology, teaching students valuable life skills."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Where is the Wolverines team located?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The Wolverines (Team 23442) are based in Sammamish, Washington, and compete from Pine Lake Middle School (PLMS). We participate in the Spencer and Tesla leagues."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How long has the Wolverines team been competing?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The Wolverines team started competing in the 2023 season as a rookie team. We are currently in our third season of FTC competition."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What leagues do the Wolverines compete in?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The Wolverines compete in both the Spencer and Tesla leagues in the FTC competition structure. We participate in league meets and qualification tournaments throughout the season."
-          }
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "What is FTC (FIRST Tech Challenge)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FTC (FIRST Tech Challenge) is a robotics competition for students in grades 7-12. Teams design, build, and program robots to compete in an alliance format against other teams. It combines the excitement of sport with science and technology, teaching students valuable life skills."
         }
-      ]
+      }, {
+        "@type": "Question",
+        "name": "Where is the Wolverines team located?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Wolverines (Team 23442) are based in Sammamish, Washington, and compete from Pine Lake Middle School (PLMS). We participate in the Spencer and Tesla leagues."
+        }
+      }, {
+        "@type": "Question",
+        "name": "How long has the Wolverines team been competing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Wolverines team started competing in the 2023 season as a rookie team. We are currently in our third season of FTC competition."
+        }
+      }, {
+        "@type": "Question",
+        "name": "What leagues do the Wolverines compete in?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Wolverines compete in both the Spencer and Tesla leagues in the FTC competition structure. We participate in league meets and qualification tournaments throughout the season."
+        }
+      }]
     };
-
     const script = document.createElement('script');
     script.type = 'application/ld+json';
     script.text = JSON.stringify(faqSchema);
     document.head.appendChild(script);
-
     return () => {
       document.head.removeChild(script);
     };
   }, []);
-
   return <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
@@ -71,7 +63,7 @@ const Home = () => {
             <div className="inline-block px-4 py-2 bg-primary/10 rounded-full mb-6">
               <span className="text-primary font-semibold">Team 23442</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-4 bg-gradient-primary bg-clip-text text-orange-600">
               WOLVERINES
             </h1>
             <p className="text-2xl md:text-3xl font-semibold mb-6 text-foreground">
@@ -82,7 +74,7 @@ const Home = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/about">
-                <Button size="lg" className="group">
+                <Button size="lg" className="group text-cyan-50 bg-blue-950 hover:bg-blue-800">
                   Learn About Us
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -139,7 +131,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="order-2 lg:order-1">
-              <h2 className="text-4xl font-orbitron font-bold mb-6">Who We Are</h2>
+              <h2 className="text-4xl font-orbitron font-bold mb-6 text-blue-900">Who We Are</h2>
               <p className="text-lg text-muted-foreground mb-6">
                 The Wolverines are a dedicated FTC robotics team from Sammamish, Washington. Since our rookie year in 2023, we've been pushing the boundaries of innovation and teamwork.
               </p>
