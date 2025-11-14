@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
+import wolverinesLogo from "@/assets/wolverines-logo.png";
 const Footer = () => {
   return <footer className="bg-card border-t border-border mt-20">
       <div className="container mx-auto px-4 py-12">
@@ -7,9 +8,11 @@ const Footer = () => {
           {/* About */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-orbitron font-bold text-xl">W</span>
-              </div>
+              <img 
+                src={wolverinesLogo} 
+                alt="Wolverines Team 23442 Logo" 
+                className="h-12 w-auto"
+              />
               <span className="font-orbitron font-bold text-xl">WOLVERINES</span>
             </div>
             <p className="text-muted-foreground">
