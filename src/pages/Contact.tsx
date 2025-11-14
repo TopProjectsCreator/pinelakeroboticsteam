@@ -5,6 +5,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters")
+    .regex(/^[a-zA-Z\s\-'\.]+$/, "Name can only contain letters, spaces, hyphens, apostrophes, and periods"),
+  email: z.string()
+    .trim()
+    .email("Please enter a valid email address")
+    .max(255, "Email must be less than 255 characters"),
+  message: z.string()
+    .trim()
+    .min(1, "Message is required")
+    .max(5000, "Message must be less than 5000 characters"),
+});
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -16,10 +33,14 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !message) {
+    // Validate inputs with zod
+    const validationResult = contactSchema.safeParse({ name, email, message });
+    
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
       toast({
-        title: "Error",
-        description: "Please fill in all fields",
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -28,11 +49,22 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('send-contact-email', {
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
         body: { name, email, message }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle rate limiting specifically
+        if (error.message?.includes("Too many requests")) {
+          toast({
+            title: "Too Many Requests",
+            description: "Please wait before submitting another message.",
+            variant: "destructive",
+          });
+          return;
+        }
+        throw error;
+      }
 
       toast({
         title: "Message sent!",
@@ -42,11 +74,11 @@ const Contact = () => {
       setName("");
       setEmail("");
       setMessage("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error sending message:", error);
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: error.message || "Failed to send message. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -73,6 +105,7 @@ const Contact = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Your name"
+                maxLength={100}
                 required
               />
             </div>
@@ -85,6 +118,7 @@ const Contact = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="your.email@example.com"
+                maxLength={255}
                 required
               />
             </div>
@@ -97,8 +131,12 @@ const Contact = () => {
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tell us what's on your mind..."
                 className="min-h-[150px]"
+                maxLength={5000}
                 required
               />
+              <p className="text-xs text-muted-foreground">
+                {message.length}/5000 characters
+              </p>
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
