@@ -114,6 +114,60 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending contact email from:", safeEmail);
 
+    // Send Slack notification
+    const slackWebhookUrl = Deno.env.get("SLACK_WEBHOOK_URL");
+    if (slackWebhookUrl) {
+      try {
+        const slackResponse = await fetch(slackWebhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: `🔔 New Contact Form Submission`,
+            blocks: [
+              {
+                type: "header",
+                text: {
+                  type: "plain_text",
+                  text: "📬 New Contact Form Message"
+                }
+              },
+              {
+                type: "section",
+                fields: [
+                  {
+                    type: "mrkdwn",
+                    text: `*Name:*\n${safeName}`
+                  },
+                  {
+                    type: "mrkdwn",
+                    text: `*Email:*\n${safeEmail}`
+                  }
+                ]
+              },
+              {
+                type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: `*Message:*\n${safeMessage}`
+                }
+              }
+            ]
+          })
+        });
+
+        if (!slackResponse.ok) {
+          console.error("Failed to send Slack notification:", await slackResponse.text());
+        } else {
+          console.log("Slack notification sent successfully");
+        }
+      } catch (slackError) {
+        console.error("Error sending Slack notification:", slackError);
+        // Don't fail the request if Slack fails
+      }
+    } else {
+      console.log("SLACK_WEBHOOK_URL not configured, skipping Slack notification");
+    }
+
     // Send notification email to team
     const teamEmail = await resend.emails.send({
       from: "Pine Lake Robotics <onboarding@resend.dev>",
