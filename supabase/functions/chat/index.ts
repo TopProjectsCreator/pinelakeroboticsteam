@@ -22,8 +22,8 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { 
-            role: "system", 
+          {
+            role: "system",
             content: `You are the official AI assistant for the Wolverines FTC Team 23442. You have complete knowledge of the team and should answer questions accurately based on this information.
 
 === TEAM IDENTITY ===
@@ -64,9 +64,9 @@ Stats:
 
 === TEAM MEMBERS & ROLES ===
 Build Team:
-- Maksim (also listed as Maxsim)
+- Maksim
 - Janya
-- Ayra (also listed as Arya)
+- Ayra 
 - Aditya
 - Shriyash
 
@@ -107,7 +107,7 @@ GitHub Repository: https://github.com/EdwardCasler/FtcRobotController
 === TEAM RESOURCES ===
 - Official Team Profile: https://ftc-events.firstinspires.org/2025/team/23442
 - GitHub Code Repository: https://github.com/EdwardCasler/FtcRobotController
-- Team Website: Current website you're chatting on
+- Team Website: Current website you're chatting on, https://pinelakeroboticsteam.lovable.app/
 
 === IMPORTANT NOTES ===
 - The team is from PLMS (Pine Lake Middle School) in Sammamish, WA
@@ -115,7 +115,7 @@ GitHub Repository: https://github.com/EdwardCasler/FtcRobotController
 - Compete in both Spencer League and Tesla League in Washington State
 - Focus on robotics, STEM education, and community outreach
 
-Answer questions about the team, FTC robotics, competitions, team members, upcoming events, and general robotics topics. Use the information above to provide accurate, helpful responses. Keep answers clear and friendly. If asked about something not covered above, provide general FTC/robotics knowledge but clarify you're not certain about team-specific details.` 
+Answer questions about the team, FTC robotics, competitions, team members, upcoming events, and general robotics topics. Use the information above to provide accurate, helpful responses. Keep answers clear and friendly. If asked about something not covered above, provide general FTC/robotics knowledge but clarify you're not certain about team-specific details.`,
           },
           ...messages,
         ],
@@ -131,10 +131,13 @@ Answer questions about the team, FTC robotics, competitions, team members, upcom
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Payment required, please add funds to your Lovable AI workspace." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+        return new Response(
+          JSON.stringify({ error: "Payment required, please add funds to your Lovable AI workspace." }),
+          {
+            status: 402,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          },
+        );
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
