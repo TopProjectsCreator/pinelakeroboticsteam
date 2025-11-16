@@ -6,7 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import DOMPurify from "dompurify";
-
+import { useEffect, useRef } from "react";
+import img1 from "@/assets/blog/first-game-image-1.png";
+import img2 from "@/assets/blog/first-game-image-2.jpg";
+import img3 from "@/assets/blog/first-game-image-3.jpg";
 const BlogPost = () => {
   const { id } = useParams();
 
@@ -37,6 +40,32 @@ const BlogPost = () => {
     },
     enabled: !!id
   });
+
+  const uploadedRef = useRef(false);
+  useEffect(() => {
+    const ensureImages = async () => {
+      if (!post) return;
+      try {
+        const storageBase = 'https://cymvcskrchgjkmdwmexu.supabase.co/storage/v1/object/public/blog-images';
+        const checkUrl = `${storageBase}/first-game-image-1.png`;
+        const head = await fetch(checkUrl, { method: 'HEAD' });
+        if (head.ok) return;
+        const origin = window.location.origin;
+        const files = [
+          { path: 'first-game-image-1.png', url: new URL(img1, origin).toString(), contentType: 'image/png' },
+          { path: 'first-game-image-2.jpg', url: new URL(img2, origin).toString(), contentType: 'image/jpeg' },
+          { path: 'first-game-image-3.jpg', url: new URL(img3, origin).toString(), contentType: 'image/jpeg' },
+        ];
+        await supabase.functions.invoke('upload-blog-images', { body: { files } });
+      } catch (e) {
+        console.error('Auto-upload blog images error', e);
+      }
+    };
+    if (post && !uploadedRef.current) {
+      uploadedRef.current = true;
+      ensureImages();
+    }
+  }, [post]);
 
   if (isLoading) {
     return (
