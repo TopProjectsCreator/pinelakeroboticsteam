@@ -20,12 +20,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Upload, FileText, Eye } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
 import { Progress } from "@/components/ui/progress";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import TurndownService from "turndown";
+import { gfm as turndownGfm } from "turndown-plugin-gfm";
 import { marked } from "marked";
 import { RichTextToolbar } from "@/components/RichTextToolbar";
 
@@ -51,7 +53,9 @@ const AddBlogPost = () => {
   const turndownService = new TurndownService({
     headingStyle: "atx",
     codeBlockStyle: "fenced",
+    bulletListMarker: "-",
   });
+  turndownService.use(turndownGfm);
 
   const form = useForm<BlogPostFormData>({
     resolver: zodResolver(blogPostSchema),
@@ -400,10 +404,10 @@ const AddBlogPost = () => {
                     </div>
                     <div>
                       <FormLabel className="text-sm text-muted-foreground mb-2 block">Preview</FormLabel>
-                      <div className="min-h-[400px] border border-input rounded-md bg-background p-4 overflow-auto">
+                      <div className="min-h-[400px] border border-input rounded-md bg-background p-4 overflow-auto markdown-preview">
                         {field.value ? (
-                          <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-base">
-                            <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                          <div>
+                            <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
                               {field.value}
                             </ReactMarkdown>
                           </div>
