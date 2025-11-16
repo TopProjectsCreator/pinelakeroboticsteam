@@ -303,7 +303,7 @@ const AddBlogPost = () => {
                       <FormLabel className="text-sm text-muted-foreground mb-2 block">Preview</FormLabel>
                       <div className="min-h-[400px] border border-input rounded-md bg-background p-4 overflow-auto">
                         {field.value ? (
-                          <div className="prose prose-sm max-w-none dark:prose-invert">
+                          <div className="prose prose-sm max-w-none dark:prose-invert prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h3:text-xl prose-p:text-base">
                             <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                               {field.value}
                             </ReactMarkdown>
