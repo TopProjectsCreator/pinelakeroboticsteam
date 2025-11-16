@@ -50,13 +50,20 @@ const BlogPost = () => {
         const checkUrl = `${storageBase}/first-game-image-1.png`;
         const head = await fetch(checkUrl, { method: 'HEAD' });
         if (head.ok) return;
-        const origin = window.location.origin;
         const files = [
-          { path: 'first-game-image-1.png', url: new URL(img1, origin).toString(), contentType: 'image/png' },
-          { path: 'first-game-image-2.jpg', url: new URL(img2, origin).toString(), contentType: 'image/jpeg' },
-          { path: 'first-game-image-3.jpg', url: new URL(img3, origin).toString(), contentType: 'image/jpeg' },
+          { name: 'first-game-image-1.png', src: img1, type: 'image/png' },
+          { name: 'first-game-image-2.jpg', src: img2, type: 'image/jpeg' },
+          { name: 'first-game-image-3.jpg', src: img3, type: 'image/jpeg' },
         ];
-        await supabase.functions.invoke('upload-blog-images', { body: { files } });
+        for (const f of files) {
+          const res = await fetch(f.src);
+          if (!res.ok) continue;
+          const blob = await res.blob();
+          const { error } = await supabase.storage
+            .from('blog-images')
+            .upload(f.name, blob, { contentType: f.type, upsert: true });
+          if (error) console.error('Storage upload error', f.name, error.message);
+        }
       } catch (e) {
         console.error('Auto-upload blog images error', e);
       }
