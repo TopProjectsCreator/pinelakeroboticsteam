@@ -388,10 +388,10 @@ const AddBlogPost = () => {
                         ) : (
                           <div>
                             <RichTextToolbar editor={editor} />
-                            <div className="border border-input border-t-0 rounded-b-md bg-background">
+                            <div className="border border-input border-t-0 rounded-b-md bg-background min-h-[400px]">
                               <EditorContent 
                                 editor={editor} 
-                                className="prose prose-sm max-w-none dark:prose-invert p-4 min-h-[400px] focus:outline-none"
+                                className="p-4"
                               />
                             </div>
                           </div>
