@@ -18,6 +18,7 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
@@ -235,14 +236,33 @@ const AddBlogPost = () => {
                       />
                     </Label>
                   </div>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Write your blog post content here..." 
-                      className="min-h-[400px]"
-                      {...field}
-                      ref={contentTextareaRef}
-                    />
-                  </FormControl>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div>
+                      <FormLabel className="text-sm text-muted-foreground mb-2 block">Editor</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Write your blog post content here..." 
+                          className="min-h-[400px]"
+                          {...field}
+                          ref={contentTextareaRef}
+                        />
+                      </FormControl>
+                    </div>
+                    <div>
+                      <FormLabel className="text-sm text-muted-foreground mb-2 block">Preview</FormLabel>
+                      <div className="min-h-[400px] border border-input rounded-md bg-background p-4 overflow-auto">
+                        {field.value ? (
+                          <div className="prose prose-sm max-w-none dark:prose-invert">
+                            <ReactMarkdown>
+                              {field.value}
+                            </ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p className="text-muted-foreground text-sm">Preview will appear here...</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
