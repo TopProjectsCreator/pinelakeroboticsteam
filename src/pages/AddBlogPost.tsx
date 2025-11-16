@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { Upload } from "lucide-react";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
@@ -32,6 +33,8 @@ type BlogPostFormData = z.infer<typeof blogPostSchema>;
 const AddBlogPost = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const form = useForm<BlogPostFormData>({
     resolver: zodResolver(blogPostSchema),
@@ -44,6 +47,63 @@ const AddBlogPost = () => {
       read_time: "",
     },
   });
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error("Please select an image file");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('blog-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(filePath);
+
+      const markdown = `![${file.name}](${publicUrl})`;
+      const textarea = contentTextareaRef.current;
+      
+      if (textarea) {
+        const cursorPos = textarea.selectionStart;
+        const currentContent = form.getValues('content');
+        const newContent = 
+          currentContent.slice(0, cursorPos) + 
+          markdown + 
+          currentContent.slice(cursorPos);
+        
+        form.setValue('content', newContent);
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(
+            cursorPos + markdown.length,
+            cursorPos + markdown.length
+          );
+        }, 0);
+      }
+
+      toast.success("Image uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("Failed to upload image. Please try again.");
+    } finally {
+      setIsUploading(false);
+      event.target.value = '';
+    }
+  };
 
   const onSubmit = async (data: BlogPostFormData) => {
     setIsSubmitting(true);
@@ -150,12 +210,37 @@ const AddBlogPost = () => {
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Content (Markdown supported)</FormLabel>
+                  <div className="flex items-center justify-between mb-2">
+                    <FormLabel>Content (Markdown supported)</FormLabel>
+                    <Label htmlFor="image-upload" className="cursor-pointer">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isUploading}
+                        asChild
+                      >
+                        <span>
+                          <Upload className="mr-2 h-4 w-4" />
+                          {isUploading ? "Uploading..." : "Add Image"}
+                        </span>
+                      </Button>
+                      <Input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleImageUpload}
+                        disabled={isUploading}
+                      />
+                    </Label>
+                  </div>
                   <FormControl>
                     <Textarea 
                       placeholder="Write your blog post content here..." 
                       className="min-h-[400px]"
-                      {...field} 
+                      {...field}
+                      ref={contentTextareaRef}
                     />
                   </FormControl>
                   <FormMessage />
