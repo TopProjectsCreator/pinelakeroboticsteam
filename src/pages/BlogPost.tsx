@@ -42,27 +42,30 @@ const BlogPost = () => {
   });
 
   const uploadedRef = useRef(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const ensureImages = async () => {
       if (!post) return;
       try {
         const storageBase = 'https://cymvcskrchgjkmdwmexu.supabase.co/storage/v1/object/public/blog-images';
-        const checkUrl = `${storageBase}/first-game-image-1.png`;
-        const head = await fetch(checkUrl, { method: 'HEAD' });
-        if (head.ok) return;
         const files = [
           { name: 'first-game-image-1.png', src: img1, type: 'image/png' },
           { name: 'first-game-image-2.jpg', src: img2, type: 'image/jpeg' },
           { name: 'first-game-image-3.jpg', src: img3, type: 'image/jpeg' },
         ];
+        // Always upsert all predefined images to guarantee availability
         for (const f of files) {
-          const res = await fetch(f.src);
-          if (!res.ok) continue;
-          const blob = await res.blob();
-          const { error } = await supabase.storage
-            .from('blog-images')
-            .upload(f.name, blob, { contentType: f.type, upsert: true });
-          if (error) console.error('Storage upload error', f.name, error.message);
+          try {
+            const res = await fetch(f.src);
+            if (!res.ok) continue;
+            const blob = await res.blob();
+            const { error } = await supabase.storage
+              .from('blog-images')
+              .upload(f.name, blob, { contentType: f.type, upsert: true });
+            if (error) console.error('Storage upload error', f.name, error.message);
+          } catch (err) {
+            console.error('Storage upload exception', f.name, err);
+          }
         }
       } catch (e) {
         console.error('Auto-upload blog images error', e);
@@ -74,7 +77,43 @@ const BlogPost = () => {
     }
   }, [post]);
 
-  if (isLoading) {
+  // Enhance images inside the rendered HTML: lazy-load and fallback to local assets if remote fails
+  useEffect(() => {
+    if (!post) return;
+    const t = setTimeout(() => {
+      const container = contentRef.current;
+      if (!container) return;
+      const imgs = Array.from(container.getElementsByTagName('img'));
+      const map: Record<string, string> = {
+        'first-game-image-1.png': img1,
+        'first-game-image-2.jpg': img2,
+        'first-game-image-3.jpg': img3,
+      };
+      imgs.forEach((img) => {
+        try {
+          img.loading = 'lazy';
+          // Set async decoding when supported
+          img.setAttribute('decoding', 'async');
+          const onError = () => {
+            try {
+              const name = new URL(img.src).pathname.split('/').pop() || '';
+              if (map[name]) {
+                img.src = map[name];
+              }
+            } catch {
+              // ignore
+            }
+          };
+          img.addEventListener('error', onError, { once: true });
+        } catch {
+          // ignore individual image failures
+        }
+      });
+    }, 0);
+    return () => clearTimeout(t);
+  }, [post]);
+
+   if (isLoading) {
     return (
       <div className="min-h-screen py-20">
         <div className="container mx-auto px-4">
@@ -153,6 +192,7 @@ const BlogPost = () => {
 
             {/* Post Content */}
             <div 
+              ref={contentRef}
               className="prose prose-lg max-w-none prose-headings:font-orbitron prose-headings:font-bold prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-ul:text-muted-foreground prose-li:mb-2 prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg"
               dangerouslySetInnerHTML={{ __html: sanitizedContent }}
             />
