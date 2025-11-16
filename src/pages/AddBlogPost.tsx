@@ -24,8 +24,10 @@ import { Progress } from "@/components/ui/progress";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
 import TurndownService from "turndown";
 import { marked } from "marked";
+import { RichTextToolbar } from "@/components/RichTextToolbar";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
@@ -69,6 +71,12 @@ const AddBlogPost = () => {
       Image.configure({
         inline: true,
         allowBase64: true,
+      }),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-primary underline",
+        },
       }),
     ],
     content: "",
@@ -378,11 +386,14 @@ const AddBlogPost = () => {
                             ref={contentTextareaRef}
                           />
                         ) : (
-                          <div className="min-h-[400px] border border-input rounded-md bg-background">
-                            <EditorContent 
-                              editor={editor} 
-                              className="prose prose-sm max-w-none dark:prose-invert p-4 min-h-[400px] focus:outline-none"
-                            />
+                          <div>
+                            <RichTextToolbar editor={editor} />
+                            <div className="border border-input border-t-0 rounded-b-md bg-background">
+                              <EditorContent 
+                                editor={editor} 
+                                className="prose prose-sm max-w-none dark:prose-invert p-4 min-h-[400px] focus:outline-none"
+                              />
+                            </div>
                           </div>
                         )}
                       </FormControl>
