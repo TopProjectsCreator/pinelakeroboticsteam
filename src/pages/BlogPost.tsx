@@ -200,18 +200,23 @@ const BlogPost = () => {
 
           {/* CAD Model Viewer */}
           <div className="mt-12 pt-8 border-t border-border">
-            <h2 className="text-2xl font-orbitron font-bold mb-4">3D Robot Model</h2>
+            <h2 className="text-2xl font-orbitron font-bold mb-4">3D Robot CAD Model</h2>
             <p className="text-muted-foreground mb-6">
-              Explore our robot design in 3D. You can rotate, zoom, and pan to see all the details.
+              View our complete robot design in Onshape. Explore the full 3D model with all assembly details, measurements, and components.
             </p>
-            <div className="relative w-full bg-muted rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: "56.25%" }}>
-              <iframe
-                src="https://cad.onshape.com/documents/d6fc0921fa0be56f5349c54e/w/8f84f96c363d5115bb43a226/e/d9992b35b6908c1cb370895c"
-                className="absolute top-0 left-0 w-full h-full"
-                allowFullScreen
-                title="Robot CAD Model"
-              />
-            </div>
+            <a 
+              href="https://cad.onshape.com/documents/d6fc0921fa0be56f5349c54e/w/8f84f96c363d5115bb43a226/e/d9992b35b6908c1cb370895c"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block"
+            >
+              <Button size="lg" className="gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                View 3D Model in Onshape
+              </Button>
+            </a>
           </div>
 
           {/* Share or Related Posts could go here */}
