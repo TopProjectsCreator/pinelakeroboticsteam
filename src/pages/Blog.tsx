@@ -3,9 +3,43 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
 const Blog = () => {
-  const blogPosts: any[] = [];
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  
+  const { data: blogPosts = [], isLoading } = useQuery({
+    queryKey: ["blog-posts", selectedCategory],
+    queryFn: async () => {
+      let query = supabase
+        .from("blog_posts")
+        .select("*")
+        .order("published_at", { ascending: false });
+      
+      if (selectedCategory !== "All") {
+        query = query.eq("category", selectedCategory);
+      }
+      
+      const { data, error } = await query;
+      if (error) throw error;
+      
+      return data.map(post => ({
+        id: post.slug,
+        title: post.title,
+        excerpt: post.excerpt,
+        category: post.category,
+        readTime: post.read_time,
+        date: new Date(post.published_at).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        })
+      }));
+    }
+  });
 
   const categories = ["All", "Season Update", "Engineering", "Programming", "Competition", "Team"];
 
@@ -27,8 +61,9 @@ const Blog = () => {
           {categories.map((category) => (
             <Badge 
               key={category} 
-              variant={category === "All" ? "default" : "outline"}
+              variant={selectedCategory === category ? "default" : "outline"}
               className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors px-4 py-2"
+              onClick={() => setSelectedCategory(category)}
             >
               {category}
             </Badge>
@@ -36,7 +71,23 @@ const Blog = () => {
         </div>
 
         {/* Blog Posts Grid or Empty State */}
-        {blogPosts.length === 0 ? (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i}>
+                <CardHeader>
+                  <Skeleton className="h-6 w-24 mb-2" />
+                  <Skeleton className="h-8 w-full mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-20 w-full mb-4" />
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : blogPosts.length === 0 ? (
           <div className="max-w-2xl mx-auto text-center py-20 animate-fade-in">
             <div className="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 opacity-80">
               <Calendar className="w-10 h-10 text-primary-foreground" />
