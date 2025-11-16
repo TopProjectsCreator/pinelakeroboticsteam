@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Tournaments from "./pages/Tournaments";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import AddBlogPost from "./pages/AddBlogPost";
 import Wiki from "./pages/Wiki";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/tournaments" element={<Tournaments />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<BlogPost />} />
+            <Route path="/add/blog-post" element={<AddBlogPost />} />
             <Route path="/wiki" element={<Wiki />} />
             <Route path="/wiki/:page" element={<Wiki />} />
             <Route path="/contact" element={<Contact />} />
