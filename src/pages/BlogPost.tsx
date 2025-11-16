@@ -198,6 +198,22 @@ const BlogPost = () => {
             />
           </article>
 
+          {/* CAD Model Viewer */}
+          <div className="mt-12 pt-8 border-t border-border">
+            <h2 className="text-2xl font-orbitron font-bold mb-4">3D Robot Model</h2>
+            <p className="text-muted-foreground mb-6">
+              Explore our robot design in 3D. You can rotate, zoom, and pan to see all the details.
+            </p>
+            <div className="relative w-full bg-muted rounded-lg overflow-hidden shadow-lg" style={{ paddingBottom: "56.25%" }}>
+              <iframe
+                src="https://cad.onshape.com/documents/d6fc0921fa0be56f5349c54e/w/8f84f96c363d5115bb43a226/e/d9992b35b6908c1cb370895c"
+                className="absolute top-0 left-0 w-full h-full"
+                allowFullScreen
+                title="Robot CAD Model"
+              />
+            </div>
+          </div>
+
           {/* Share or Related Posts could go here */}
           <div className="mt-12 pt-8 border-t border-border">
             <Link to="/blog">
