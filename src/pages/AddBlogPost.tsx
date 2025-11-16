@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import { Progress } from "@/components/ui/progress";
 
 const blogPostSchema = z.object({
@@ -303,7 +304,7 @@ const AddBlogPost = () => {
                       <div className="min-h-[400px] border border-input rounded-md bg-background p-4 overflow-auto">
                         {field.value ? (
                           <div className="prose prose-sm max-w-none dark:prose-invert">
-                            <ReactMarkdown>
+                            <ReactMarkdown rehypePlugins={[rehypeRaw]}>
                               {field.value}
                             </ReactMarkdown>
                           </div>
