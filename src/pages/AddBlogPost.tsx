@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Upload } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { Progress } from "@/components/ui/progress";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
@@ -35,6 +36,7 @@ const AddBlogPost = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const form = useForm<BlogPostFormData>({
@@ -68,15 +70,32 @@ const AddBlogPost = () => {
     }
 
     setIsUploading(true);
+    setUploadProgress(0);
+    
     try {
       const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
+
+      // Progress simulation for better UX
+      const fileSize = file.size;
+      const estimatedTime = Math.max(1000, Math.min(fileSize / 10000, 10000)); // 1-10 seconds based on file size
+      
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) return prev;
+          return prev + 10;
+        });
+      }, estimatedTime / 9);
 
       const { error: uploadError, data } = await supabase.storage
         .from('blog-images')
         .upload(filePath, file);
 
+      clearInterval(progressInterval);
+      
       if (uploadError) throw uploadError;
+      
+      setUploadProgress(100);
 
       const { data: { publicUrl } } = supabase.storage
         .from('blog-images')
@@ -122,6 +141,7 @@ const AddBlogPost = () => {
       toast.error("Failed to upload file. Please try again.");
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
       event.target.value = '';
     }
   };
@@ -231,30 +251,40 @@ const AddBlogPost = () => {
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex items-center justify-between mb-2">
-                    <FormLabel>Content (Markdown supported)</FormLabel>
-                    <Label htmlFor="media-upload" className="cursor-pointer">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        disabled={isUploading}
-                        asChild
-                      >
-                        <span>
-                          <Upload className="mr-2 h-4 w-4" />
-                          {isUploading ? "Uploading..." : "Add Media"}
-                        </span>
-                      </Button>
-                      <Input
-                        id="media-upload"
-                        type="file"
-                        accept="image/*,video/*,audio/*,.obj,.gltf,.glb,.fbx,.stl,.dae,.3ds"
-                        className="hidden"
-                        onChange={handleMediaUpload}
-                        disabled={isUploading}
-                      />
-                    </Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Content (Markdown supported)</FormLabel>
+                      <Label htmlFor="media-upload" className="cursor-pointer">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={isUploading}
+                          asChild
+                        >
+                          <span>
+                            <Upload className="mr-2 h-4 w-4" />
+                            {isUploading ? "Uploading..." : "Add Media"}
+                          </span>
+                        </Button>
+                        <Input
+                          id="media-upload"
+                          type="file"
+                          accept="image/*,video/*,audio/*,.obj,.gltf,.glb,.fbx,.stl,.dae,.3ds"
+                          className="hidden"
+                          onChange={handleMediaUpload}
+                          disabled={isUploading}
+                        />
+                      </Label>
+                    </div>
+                    {isUploading && (
+                      <div className="space-y-1">
+                        <Progress value={uploadProgress} className="h-2" />
+                        <p className="text-xs text-muted-foreground text-right">
+                          {uploadProgress}%
+                        </p>
+                      </div>
+                    )}
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <div>
