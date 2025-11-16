@@ -49,18 +49,26 @@ const AddBlogPost = () => {
     },
   });
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      toast.error("Please select an image file");
+    const fileType = file.type;
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
+    
+    // Validate file type
+    const isImage = fileType.startsWith('image/');
+    const isVideo = fileType.startsWith('video/');
+    const isAudio = fileType.startsWith('audio/');
+    const is3D = ['.obj', '.gltf', '.glb', '.fbx', '.stl', '.dae', '.3ds'].includes(`.${fileExt}`);
+    
+    if (!isImage && !isVideo && !isAudio && !is3D) {
+      toast.error("Please select an image, video, audio, or 3D file");
       return;
     }
 
     setIsUploading(true);
     try {
-      const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
 
@@ -74,7 +82,18 @@ const AddBlogPost = () => {
         .from('blog-images')
         .getPublicUrl(filePath);
 
-      const markdown = `![${file.name}](${publicUrl})`;
+      // Generate appropriate markdown/HTML based on file type
+      let insertText = '';
+      if (isImage) {
+        insertText = `![${file.name}](${publicUrl})`;
+      } else if (isVideo) {
+        insertText = `<video controls width="100%">\n  <source src="${publicUrl}" type="${fileType}">\n  Your browser does not support the video tag.\n</video>`;
+      } else if (isAudio) {
+        insertText = `<audio controls>\n  <source src="${publicUrl}" type="${fileType}">\n  Your browser does not support the audio tag.\n</audio>`;
+      } else if (is3D) {
+        insertText = `[Download 3D Model: ${file.name}](${publicUrl})`;
+      }
+
       const textarea = contentTextareaRef.current;
       
       if (textarea) {
@@ -82,7 +101,7 @@ const AddBlogPost = () => {
         const currentContent = form.getValues('content');
         const newContent = 
           currentContent.slice(0, cursorPos) + 
-          markdown + 
+          insertText + 
           currentContent.slice(cursorPos);
         
         form.setValue('content', newContent);
@@ -90,16 +109,17 @@ const AddBlogPost = () => {
         setTimeout(() => {
           textarea.focus();
           textarea.setSelectionRange(
-            cursorPos + markdown.length,
-            cursorPos + markdown.length
+            cursorPos + insertText.length,
+            cursorPos + insertText.length
           );
         }, 0);
       }
 
-      toast.success("Image uploaded successfully!");
+      const fileTypeText = isImage ? 'Image' : isVideo ? 'Video' : isAudio ? 'Audio' : '3D file';
+      toast.success(`${fileTypeText} uploaded successfully!`);
     } catch (error) {
-      console.error("Error uploading image:", error);
-      toast.error("Failed to upload image. Please try again.");
+      console.error("Error uploading media:", error);
+      toast.error("Failed to upload file. Please try again.");
     } finally {
       setIsUploading(false);
       event.target.value = '';
@@ -213,7 +233,7 @@ const AddBlogPost = () => {
                 <FormItem>
                   <div className="flex items-center justify-between mb-2">
                     <FormLabel>Content (Markdown supported)</FormLabel>
-                    <Label htmlFor="image-upload" className="cursor-pointer">
+                    <Label htmlFor="media-upload" className="cursor-pointer">
                       <Button
                         type="button"
                         variant="outline"
@@ -223,15 +243,15 @@ const AddBlogPost = () => {
                       >
                         <span>
                           <Upload className="mr-2 h-4 w-4" />
-                          {isUploading ? "Uploading..." : "Add Image"}
+                          {isUploading ? "Uploading..." : "Add Media"}
                         </span>
                       </Button>
                       <Input
-                        id="image-upload"
+                        id="media-upload"
                         type="file"
-                        accept="image/*"
+                        accept="image/*,video/*,audio/*,.obj,.gltf,.glb,.fbx,.stl,.dae,.3ds"
                         className="hidden"
-                        onChange={handleImageUpload}
+                        onChange={handleMediaUpload}
                         disabled={isUploading}
                       />
                     </Label>
