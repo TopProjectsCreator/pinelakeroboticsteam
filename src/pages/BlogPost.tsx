@@ -11,20 +11,21 @@ import img1 from "@/assets/blog/first-game-image-1.png";
 import img2 from "@/assets/blog/first-game-image-2.jpg";
 import img3 from "@/assets/blog/first-game-image-3.jpg";
 const BlogPost = () => {
-  const { id } = useParams();
-
-  const { data: post, isLoading } = useQuery({
+  const {
+    id
+  } = useParams();
+  const {
+    data: post,
+    isLoading
+  } = useQuery({
     queryKey: ["blog-post", id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*")
-        .eq("slug", id)
-        .maybeSingle();
-      
+      const {
+        data,
+        error
+      } = await supabase.from("blog_posts").select("*").eq("slug", id).maybeSingle();
       if (error) throw error;
       if (!data) return null;
-      
       return {
         id: data.slug,
         title: data.title,
@@ -40,7 +41,6 @@ const BlogPost = () => {
     },
     enabled: !!id
   });
-
   const uploadedRef = useRef(false);
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -48,20 +48,31 @@ const BlogPost = () => {
       if (!post) return;
       try {
         const storageBase = 'https://cymvcskrchgjkmdwmexu.supabase.co/storage/v1/object/public/blog-images';
-        const files = [
-          { name: 'first-game-image-1.png', src: img1, type: 'image/png' },
-          { name: 'first-game-image-2.jpg', src: img2, type: 'image/jpeg' },
-          { name: 'first-game-image-3.jpg', src: img3, type: 'image/jpeg' },
-        ];
+        const files = [{
+          name: 'first-game-image-1.png',
+          src: img1,
+          type: 'image/png'
+        }, {
+          name: 'first-game-image-2.jpg',
+          src: img2,
+          type: 'image/jpeg'
+        }, {
+          name: 'first-game-image-3.jpg',
+          src: img3,
+          type: 'image/jpeg'
+        }];
         // Always upsert all predefined images to guarantee availability
         for (const f of files) {
           try {
             const res = await fetch(f.src);
             if (!res.ok) continue;
             const blob = await res.blob();
-            const { error } = await supabase.storage
-              .from('blog-images')
-              .upload(f.name, blob, { contentType: f.type, upsert: true });
+            const {
+              error
+            } = await supabase.storage.from('blog-images').upload(f.name, blob, {
+              contentType: f.type,
+              upsert: true
+            });
             if (error) console.error('Storage upload error', f.name, error.message);
           } catch (err) {
             console.error('Storage upload exception', f.name, err);
@@ -87,9 +98,9 @@ const BlogPost = () => {
       const map: Record<string, string> = {
         'first-game-image-1.png': img1,
         'first-game-image-2.jpg': img2,
-        'first-game-image-3.jpg': img3,
+        'first-game-image-3.jpg': img3
       };
-      imgs.forEach((img) => {
+      imgs.forEach(img => {
         try {
           img.loading = 'lazy';
           // Set async decoding when supported
@@ -104,7 +115,9 @@ const BlogPost = () => {
               // ignore
             }
           };
-          img.addEventListener('error', onError, { once: true });
+          img.addEventListener('error', onError, {
+            once: true
+          });
         } catch {
           // ignore individual image failures
         }
@@ -112,10 +125,8 @@ const BlogPost = () => {
     }, 0);
     return () => clearTimeout(t);
   }, [post]);
-
-   if (isLoading) {
-    return (
-      <div className="min-h-screen py-20">
+  if (isLoading) {
+    return <div className="min-h-screen py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <Skeleton className="h-10 w-32 mb-8" />
@@ -132,13 +143,10 @@ const BlogPost = () => {
             </div>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (!post) {
-    return (
-      <div className="min-h-screen py-20">
+    return <div className="min-h-screen py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-3xl font-orbitron font-bold mb-4">Post Not Found</h1>
@@ -151,14 +159,10 @@ const BlogPost = () => {
             </Link>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   const sanitizedContent = DOMPurify.sanitize(post.content);
-
-  return (
-    <div className="min-h-screen py-20">
+  return <div className="min-h-screen py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           {/* Back Button */}
@@ -191,33 +195,13 @@ const BlogPost = () => {
             </div>
 
             {/* Post Content */}
-            <div 
-              ref={contentRef}
-              className="prose prose-lg max-w-none prose-headings:font-orbitron prose-headings:font-bold prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-ul:text-muted-foreground prose-li:mb-2 prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg"
-              dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-            />
+            <div ref={contentRef} className="prose prose-lg max-w-none prose-headings:font-orbitron prose-headings:font-bold prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-ul:text-muted-foreground prose-li:mb-2 prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg" dangerouslySetInnerHTML={{
+            __html: sanitizedContent
+          }} />
           </article>
 
           {/* CAD Model Viewer */}
-          <div className="mt-12 pt-8 border-t border-border">
-            <h2 className="text-2xl font-orbitron font-bold mb-4">3D Robot CAD Model</h2>
-            <p className="text-muted-foreground mb-6">
-              View our complete robot design in Onshape. Explore the full 3D model with all assembly details, measurements, and components.
-            </p>
-            <a 
-              href="https://cad.onshape.com/documents/d6fc0921fa0be56f5349c54e/w/8f84f96c363d5115bb43a226/e/d9992b35b6908c1cb370895c"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button size="lg" className="gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-                View 3D Model in Onshape
-              </Button>
-            </a>
-          </div>
+          
 
           {/* Share or Related Posts could go here */}
           <div className="mt-12 pt-8 border-t border-border">
@@ -230,8 +214,6 @@ const BlogPost = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default BlogPost;
