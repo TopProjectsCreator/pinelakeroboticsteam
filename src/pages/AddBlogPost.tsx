@@ -17,10 +17,15 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload } from "lucide-react";
+import { Upload, FileText, Eye } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { Progress } from "@/components/ui/progress";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import TurndownService from "turndown";
+import { marked } from "marked";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
@@ -38,7 +43,13 @@ const AddBlogPost = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [editorMode, setEditorMode] = useState<"markdown" | "visual">("markdown");
   const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  const turndownService = new TurndownService({
+    headingStyle: "atx",
+    codeBlockStyle: "fenced",
+  });
 
   const form = useForm<BlogPostFormData>({
     resolver: zodResolver(blogPostSchema),
@@ -51,6 +62,37 @@ const AddBlogPost = () => {
       read_time: "",
     },
   });
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Image.configure({
+        inline: true,
+        allowBase64: true,
+      }),
+    ],
+    content: "",
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      const markdown = turndownService.turndown(html);
+      form.setValue("content", markdown);
+    },
+  });
+
+  const handleModeSwitch = (mode: "markdown" | "visual") => {
+    const currentContent = form.getValues("content");
+    
+    if (mode === "visual" && editor) {
+      // Convert markdown to HTML for visual editor
+      const html = marked(currentContent) as string;
+      editor.commands.setContent(html);
+    } else if (mode === "markdown" && editor) {
+      // Content is already in markdown form, just update textarea
+      form.setValue("content", currentContent);
+    }
+    
+    setEditorMode(mode);
+  };
 
   const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -106,6 +148,13 @@ const AddBlogPost = () => {
       let insertText = '';
       if (isImage) {
         insertText = `![${file.name}](${publicUrl})`;
+        
+        // For visual editor, insert image directly
+        if (editorMode === "visual" && editor) {
+          editor.chain().focus().setImage({ src: publicUrl, alt: file.name }).run();
+          toast.success("Image uploaded successfully!");
+          return;
+        }
       } else if (isVideo) {
         insertText = `<video controls width="100%">\n  <source src="${publicUrl}" type="${fileType}">\n  Your browser does not support the video tag.\n</video>`;
       } else if (isAudio) {
@@ -114,25 +163,31 @@ const AddBlogPost = () => {
         insertText = `[Download 3D Model: ${file.name}](${publicUrl})`;
       }
 
-      const textarea = contentTextareaRef.current;
+      if (editorMode === "visual" && editor) {
+        // Insert HTML directly in visual editor
+        editor.commands.insertContent(insertText);
+      } else {
+        // Insert in markdown textarea
+        const textarea = contentTextareaRef.current;
       
-      if (textarea) {
-        const cursorPos = textarea.selectionStart;
-        const currentContent = form.getValues('content');
-        const newContent = 
-          currentContent.slice(0, cursorPos) + 
-          insertText + 
-          currentContent.slice(cursorPos);
-        
-        form.setValue('content', newContent);
-        
-        setTimeout(() => {
-          textarea.focus();
-          textarea.setSelectionRange(
-            cursorPos + insertText.length,
-            cursorPos + insertText.length
-          );
-        }, 0);
+        if (textarea) {
+          const cursorPos = textarea.selectionStart;
+          const currentContent = form.getValues('content');
+          const newContent = 
+            currentContent.slice(0, cursorPos) + 
+            insertText + 
+            currentContent.slice(cursorPos);
+          
+          form.setValue('content', newContent);
+          
+          setTimeout(() => {
+            textarea.focus();
+            textarea.setSelectionRange(
+              cursorPos + insertText.length,
+              cursorPos + insertText.length
+            );
+          }, 0);
+        }
       }
 
       const fileTypeText = isImage ? 'Image' : isVideo ? 'Video' : isAudio ? 'Audio' : '3D file';
@@ -254,29 +309,53 @@ const AddBlogPost = () => {
                 <FormItem>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <FormLabel>Content (Markdown supported)</FormLabel>
-                      <Label htmlFor="media-upload" className="cursor-pointer">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          disabled={isUploading}
-                          asChild
-                        >
-                          <span>
-                            <Upload className="mr-2 h-4 w-4" />
-                            {isUploading ? "Uploading..." : "Add Media"}
-                          </span>
-                        </Button>
-                        <Input
-                          id="media-upload"
-                          type="file"
-                          accept="image/*,video/*,audio/*,.obj,.gltf,.glb,.fbx,.stl,.dae,.3ds"
-                          className="hidden"
-                          onChange={handleMediaUpload}
-                          disabled={isUploading}
-                        />
-                      </Label>
+                      <FormLabel>Content</FormLabel>
+                      <div className="flex items-center gap-2">
+                        <div className="flex border border-input rounded-md">
+                          <Button
+                            type="button"
+                            variant={editorMode === "markdown" ? "default" : "ghost"}
+                            size="sm"
+                            className="rounded-r-none"
+                            onClick={() => handleModeSwitch("markdown")}
+                          >
+                            <FileText className="mr-2 h-4 w-4" />
+                            Markdown
+                          </Button>
+                          <Button
+                            type="button"
+                            variant={editorMode === "visual" ? "default" : "ghost"}
+                            size="sm"
+                            className="rounded-l-none"
+                            onClick={() => handleModeSwitch("visual")}
+                          >
+                            <Eye className="mr-2 h-4 w-4" />
+                            Visual
+                          </Button>
+                        </div>
+                        <Label htmlFor="media-upload" className="cursor-pointer">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            disabled={isUploading}
+                            asChild
+                          >
+                            <span>
+                              <Upload className="mr-2 h-4 w-4" />
+                              {isUploading ? "Uploading..." : "Add Media"}
+                            </span>
+                          </Button>
+                          <Input
+                            id="media-upload"
+                            type="file"
+                            accept="image/*,video/*,audio/*,.obj,.gltf,.glb,.fbx,.stl,.dae,.3ds"
+                            className="hidden"
+                            onChange={handleMediaUpload}
+                            disabled={isUploading}
+                          />
+                        </Label>
+                      </div>
                     </div>
                     {isUploading && (
                       <div className="space-y-1">
@@ -291,12 +370,21 @@ const AddBlogPost = () => {
                     <div>
                       <FormLabel className="text-sm text-muted-foreground mb-2 block">Editor</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Write your blog post content here..." 
-                          className="min-h-[400px]"
-                          {...field}
-                          ref={contentTextareaRef}
-                        />
+                        {editorMode === "markdown" ? (
+                          <Textarea 
+                            placeholder="Write your blog post content here..." 
+                            className="min-h-[400px]"
+                            {...field}
+                            ref={contentTextareaRef}
+                          />
+                        ) : (
+                          <div className="min-h-[400px] border border-input rounded-md bg-background">
+                            <EditorContent 
+                              editor={editor} 
+                              className="prose prose-sm max-w-none dark:prose-invert p-4 min-h-[400px] focus:outline-none"
+                            />
+                          </div>
+                        )}
                       </FormControl>
                     </div>
                     <div>

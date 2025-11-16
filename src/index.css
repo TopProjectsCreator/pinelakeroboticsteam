@@ -101,4 +101,62 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Tiptap Editor Styles */
+  .ProseMirror {
+    outline: none;
+  }
+  
+  .ProseMirror p.is-editor-empty:first-child::before {
+    color: hsl(var(--muted-foreground));
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
+  
+  .ProseMirror h1 {
+    @apply text-3xl font-bold mb-4;
+  }
+  
+  .ProseMirror h2 {
+    @apply text-2xl font-bold mb-3;
+  }
+  
+  .ProseMirror h3 {
+    @apply text-xl font-bold mb-2;
+  }
+  
+  .ProseMirror p {
+    @apply mb-4;
+  }
+  
+  .ProseMirror ul,
+  .ProseMirror ol {
+    @apply pl-6 mb-4;
+  }
+  
+  .ProseMirror ul {
+    @apply list-disc;
+  }
+  
+  .ProseMirror ol {
+    @apply list-decimal;
+  }
+  
+  .ProseMirror img {
+    @apply max-w-full h-auto rounded-md;
+  }
+  
+  .ProseMirror code {
+    @apply bg-muted px-1 py-0.5 rounded text-sm;
+  }
+  
+  .ProseMirror pre {
+    @apply bg-muted p-4 rounded-md overflow-x-auto mb-4;
+  }
+  
+  .ProseMirror blockquote {
+    @apply border-l-4 border-primary pl-4 italic my-4;
+  }
 }
