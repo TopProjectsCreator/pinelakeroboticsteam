@@ -95,11 +95,11 @@ const BlogPost = () => {
       const container = contentRef.current;
       if (!container) return;
       const imgs = Array.from(container.getElementsByTagName('img'));
-      const map: Record<string, string> = {
-        'first-game-image-1.png': img1,
-        'first-game-image-2.jpg': img2,
-        'first-game-image-3.jpg': img3
-      };
+        const map: Record<string, string> = {
+          'first-game-image-1.jpg': img1,
+          'first-game-image-2.jpg': img2,
+          'first-game-image-3.jpg': img3
+        };
       imgs.forEach(img => {
         try {
           img.loading = 'lazy';
