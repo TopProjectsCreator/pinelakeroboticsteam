@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import DOMPurify from "dompurify";
 import { useEffect, useRef } from "react";
-import img1 from "@/assets/blog/first-game-image-1.png";
+import img1 from "@/assets/blog/first-game-image-1.jpg";
 import img2 from "@/assets/blog/first-game-image-2.jpg";
 import img3 from "@/assets/blog/first-game-image-3.jpg";
 const BlogPost = () => {
@@ -49,9 +49,9 @@ const BlogPost = () => {
       try {
         const storageBase = 'https://cymvcskrchgjkmdwmexu.supabase.co/storage/v1/object/public/blog-images';
         const files = [{
-          name: 'first-game-image-1.png',
+          name: 'first-game-image-1.jpg',
           src: img1,
-          type: 'image/png'
+          type: 'image/jpeg'
         }, {
           name: 'first-game-image-2.jpg',
           src: img2,
