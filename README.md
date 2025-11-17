@@ -1,73 +1,126 @@
-# Welcome to your Lovable project
 
-## Project info
+# Pinelake Robotics Team Website
+![CI](https://github.com/TopProjectsCreator/pinelakeroboticsteam/actions/workflows/ci.yml/badge.svg)
 
-**URL**: https://lovable.dev/projects/d5137c50-b103-4c3b-a169-83883dc1f8ad
+[Visit the live site](https://pinelakeroboticsteam.lovable.app) — pinelakeroboticsteam.lovable.app
 
-## How can I edit this code?
+A small React + Vite site for the Pinelake Robotics Team. Built with TypeScript, Tailwind CSS, and Supabase backend functions for server-side features.
 
-There are several ways of editing your application.
+## Key features
 
-**Use Lovable**
+- Vite + React + TypeScript frontend
+- Tailwind CSS styling with shadcn/ui components
+- Supabase functions for chat, contact email, blog posts, and image upload
+- Blog pages and CMS-like add post function (serverless via Supabase)
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d5137c50-b103-4c3b-a169-83883dc1f8ad) and start prompting.
+## Quick start
 
-Changes made via Lovable will be committed automatically to this repo.
+Prerequisites:
+- Node.js 18+ (or Bun if you prefer)
+- Git
 
-**Use your preferred IDE**
+Install dependencies:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+npm install
+# or with bun
+# bun install
 ```
 
-**Edit a file directly in GitHub**
+Run development server:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```bash
+npm run dev
+# or with pnpm: pnpm dev
+# preview build
+npm run preview
+```
 
-**Use GitHub Codespaces**
+Build for production:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run build
+```
 
-## What technologies are used for this project?
+Lint:
 
-This project is built with:
+```bash
+npm run lint
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Project structure (important files)
 
-## How can I deploy this project?
+- `src/` — React source files
+	- `components/` — UI and shared components (shadcn/ui)
+	- `pages/` — page routes: `Home`, `Blog`, `BlogPost`, `Contact`, `Wiki`, `Tournaments`
+	- `integrations/supabase/` — Supabase client and types
+	- `supabase/functions/` — serverless functions used by the app
 
-Simply open [Lovable](https://lovable.dev/projects/d5137c50-b103-4c3b-a169-83883dc1f8ad) and click on Share -> Publish.
+- `public/` — static assets
+- `tailwind.config.ts` — Tailwind config
+- `vite.config.ts` — Vite config
 
-## Can I connect a custom domain to my Lovable project?
+## Supabase functions
 
-Yes, you can!
+The repository contains several Supabase Edge Functions in `supabase/functions/`:
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- `chat` — server endpoint for chatbot interactions
+- `create-blog-post` — handles blog post creation
+- `send-contact-email` — sends contact form emails
+- `upload-blog-images` — handles blog image uploads
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+When deploying, ensure your Supabase project has the required environment variables set and the functions are deployed.
+
+## Environment variables
+
+Configure environment variables for Supabase (in your hosting platform or `.env` for local dev):
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+(For Edge Functions, set appropriate `SUPABASE_SERVICE_ROLE_KEY` or similar secrets on the server.)
+
+### Recommended CI / Deploy secrets
+
+- `VITE_SUPABASE_URL` — Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` — Supabase anon/public key
+- `SUPABASE_SERVICE_ROLE_KEY` — (only set for server-side builds/functions; keep secret)
+
+Be careful not to expose service role keys to client-side bundles.
+
+## Contributing
+
+- Create a fork and open a PR targeting `main`.
+- Run `npm run lint` and `npm run build` before opening PRs.
+- Keep UI changes consistent with existing `components/ui` patterns.
+
+## Deployments
+
+### Lovable (current)
+
+The site is published on Lovable at `pinelakeroboticsteam.lovable.app`. Use the Lovable dashboard to manage domain settings, environment variables, and redeploys.
+
+### Vercel / Netlify (quick guide)
+
+- Connect your GitHub repository to Vercel or Netlify.
+- Set the environment variables listed above in the project settings (`VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`).
+- Build command: `npm run build`
+- Output directory: `dist`
+
+After connecting the repo and setting env vars, trigger a deploy by pushing to `main` or opening a PR.
+
+## Continuous Integration (GitHub Actions)
+
+A sample GitHub Actions workflow is included in `.github/workflows/ci.yml`. It runs on `push` and `pull_request` and performs:
+- Node install and caching
+- `npm run lint`
+- `npm run build`
+
+You can enable the workflow via the GitHub Actions UI. If your CI needs to test Supabase functions or run integration tests, add secrets in the repository `Settings -> Secrets` (for example, `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`).
+
+## Notes
+
+- This project uses Vite; scripts are in `package.json` (`dev`, `build`, `preview`, `lint`).
+- `bun.lockb` exists in the repo if you prefer Bun as the runtime.
+
+---
