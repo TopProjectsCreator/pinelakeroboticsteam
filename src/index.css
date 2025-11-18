@@ -228,12 +228,12 @@ All colors MUST be HSL.
   }
 
   /* Blog Post Content Styles */
-  .prose h1 {
-    font-size: 3rem !important;
+  .prose h3 {
+    font-size: 2rem !important;
     font-weight: 700 !important;
-    margin-top: 2.5rem !important;
-    margin-bottom: 1.5rem !important;
-    line-height: 1.1 !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.2 !important;
   }
 
   /* Markdown Preview Styles */
