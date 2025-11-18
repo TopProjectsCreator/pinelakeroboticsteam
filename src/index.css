@@ -227,6 +227,15 @@ All colors MUST be HSL.
     text-decoration: none;
   }
 
+  /* Blog Post Content Styles */
+  .prose h1 {
+    font-size: 3rem !important;
+    font-weight: 700 !important;
+    margin-top: 2.5rem !important;
+    margin-bottom: 1.5rem !important;
+    line-height: 1.1 !important;
+  }
+
   /* Markdown Preview Styles */
   .markdown-preview h1 {
     font-size: 2rem;
