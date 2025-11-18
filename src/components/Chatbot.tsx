@@ -7,7 +7,11 @@ import { MessageCircle, X, Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ReactMarkdown from "react-markdown";
 
-type Message = { role: "user" | "assistant"; content: string };
+type Message = { 
+  role: "user" | "assistant"; 
+  content: string;
+  images?: Array<{ url: string }>;
+};
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,6 +63,7 @@ const Chatbot = () => {
     let textBuffer = "";
     let streamDone = false;
     let assistantContent = "";
+    let assistantImages: Array<{ url: string }> = [];
 
     while (!streamDone) {
       const { done, value } = await reader.read();
@@ -83,16 +88,33 @@ const Chatbot = () => {
         try {
           const parsed = JSON.parse(jsonStr);
           const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+          const images = parsed.choices?.[0]?.message?.images;
+          
+          if (images && Array.isArray(images)) {
+            assistantImages = images.map((img: any) => ({
+              url: img.image_url?.url || img.url
+            }));
+          }
+          
           if (content) {
             assistantContent += content;
+          }
+          
+          if (content || images) {
             setMessages((prev) => {
               const last = prev[prev.length - 1];
               if (last?.role === "assistant") {
                 return prev.map((m, i) =>
-                  i === prev.length - 1 ? { ...m, content: assistantContent } : m
+                  i === prev.length - 1 
+                    ? { ...m, content: assistantContent, images: assistantImages.length > 0 ? assistantImages : undefined } 
+                    : m
                 );
               }
-              return [...prev, { role: "assistant", content: assistantContent }];
+              return [...prev, { 
+                role: "assistant", 
+                content: assistantContent,
+                images: assistantImages.length > 0 ? assistantImages : undefined
+              }];
             });
           }
         } catch {
@@ -163,6 +185,18 @@ const Chatbot = () => {
                         : "bg-muted"
                     }`}
                   >
+                    {msg.images && msg.images.length > 0 && (
+                      <div className="space-y-2 mb-2">
+                        {msg.images.map((img, imgIdx) => (
+                          <img
+                            key={imgIdx}
+                            src={img.url}
+                            alt="AI generated"
+                            className="max-w-full rounded-lg"
+                          />
+                        ))}
+                      </div>
+                    )}
                     <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
