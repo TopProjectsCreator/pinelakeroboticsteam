@@ -195,7 +195,7 @@ const BlogPost = () => {
             </div>
 
             {/* Post Content */}
-            <div ref={contentRef} className="prose prose-lg max-w-none prose-headings:font-orbitron prose-headings:font-bold prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-ul:text-muted-foreground prose-li:mb-2 prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg" dangerouslySetInnerHTML={{
+            <div ref={contentRef} className="prose prose-lg max-w-none prose-headings:font-orbitron prose-headings:font-bold prose-h1:text-5xl prose-h1:mt-10 prose-h1:mb-6 prose-h2:text-3xl prose-h2:mt-8 prose-h2:mb-4 prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:mb-4 prose-ul:text-muted-foreground prose-li:mb-2 prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg" dangerouslySetInnerHTML={{
             __html: sanitizedContent
           }} />
           </article>
