@@ -6,6 +6,7 @@ import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
 import heroImage from "@/assets/robot-hero.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
+import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
 const Home = () => {
   useEffect(() => {
     const faqSchema = {
@@ -144,7 +145,7 @@ const Home = () => {
               </Link>
             </div>
             <div className="order-1 lg:order-2">
-              <img src={robotDetail} alt="Wolverines robot detail" className="rounded-2xl shadow-card w-full h-auto" />
+              <img src={teamPhoto2025} alt="Wolverines Team 23442 - 2025 Season" className="rounded-2xl shadow-card w-full h-auto" />
             </div>
           </div>
         </div>
