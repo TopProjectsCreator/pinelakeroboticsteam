@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink, Github } from "lucide-react";
-import teamCollaboration from "@/assets/team-collaboration.jpg";
+import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
 import maxsimPhoto from "@/assets/team/maxsim.jpg";
 import simPhoto from "@/assets/team/sim.jpg";
 import janyaPhoto from "@/assets/team/janya.jpg";
@@ -38,7 +38,7 @@ const About = () => {
 
         {/* Team Image */}
         <div className="max-w-5xl mx-auto mb-16">
-          <img src={teamCollaboration} alt="Wolverines team collaboration" className="rounded-2xl shadow-card w-full h-auto" />
+          <img src={teamPhoto2025} alt="Wolverines Team 23442 - 2025 Season" className="rounded-2xl shadow-card w-full h-auto" />
         </div>
 
         {/* Our Story */}
