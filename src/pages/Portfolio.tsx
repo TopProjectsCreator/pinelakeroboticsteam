@@ -18,40 +18,64 @@ import page12 from "@/assets/portfolio/page-12.jpg";
 import page13 from "@/assets/portfolio/page-13.jpg";
 import page14 from "@/assets/portfolio/page-14.jpg";
 import page15 from "@/assets/portfolio/page-15.jpg";
-
-const portfolioPages = [
-  { src: page1, title: "Cover" },
-  { src: page2, title: "Our Team" },
-  { src: page3, title: "Game Strategy" },
-  { src: page4, title: "Robot Architecture" },
-  { src: page5, title: "Engineering Process" },
-  { src: page6, title: "Robot Architecture 2" },
-  { src: page7, title: "Robot Upgrades" },
-  { src: page8, title: "Robot Overviews" },
-  { src: page9, title: "Programming" },
-  { src: page10, title: "Obstacles" },
-  { src: page11, title: "Lessons Learned" },
-  { src: page12, title: "Lessons Learned 2" },
-  { src: page13, title: "Outreach" },
-  { src: page14, title: "Sponsors & Practice" },
-  { src: page15, title: "Mentors" },
-];
-
+const portfolioPages = [{
+  src: page1,
+  title: "Cover"
+}, {
+  src: page2,
+  title: "Our Team"
+}, {
+  src: page3,
+  title: "Game Strategy"
+}, {
+  src: page4,
+  title: "Robot Architecture"
+}, {
+  src: page5,
+  title: "Engineering Process"
+}, {
+  src: page6,
+  title: "Robot Architecture 2"
+}, {
+  src: page7,
+  title: "Robot Upgrades"
+}, {
+  src: page8,
+  title: "Robot Overviews"
+}, {
+  src: page9,
+  title: "Programming"
+}, {
+  src: page10,
+  title: "Obstacles"
+}, {
+  src: page11,
+  title: "Lessons Learned"
+}, {
+  src: page12,
+  title: "Lessons Learned 2"
+}, {
+  src: page13,
+  title: "Outreach"
+}, {
+  src: page14,
+  title: "Sponsors & Practice"
+}, {
+  src: page15,
+  title: "Mentors"
+}];
 const Portfolio = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
-
   const goToPrevious = () => {
-    setCurrentPage((prev) => (prev > 0 ? prev - 1 : portfolioPages.length - 1));
+    setCurrentPage(prev => prev > 0 ? prev - 1 : portfolioPages.length - 1);
     setIsZoomed(false);
   };
-
   const goToNext = () => {
-    setCurrentPage((prev) => (prev < portfolioPages.length - 1 ? prev + 1 : 0));
+    setCurrentPage(prev => prev < portfolioPages.length - 1 ? prev + 1 : 0);
     setIsZoomed(false);
   };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") goToPrevious();
     if (e.key === "ArrowRight") goToNext();
@@ -60,22 +84,17 @@ const Portfolio = () => {
       setIsZoomed(false);
     }
   };
-
   useEffect(() => {
     document.title = "Engineering Portfolio | Wolverines FTC Team 23442";
   }, []);
-
-  return (
-    <div className="min-h-screen bg-background" onKeyDown={handleKeyDown} tabIndex={0}>
+  return <div className="min-h-screen bg-background" onKeyDown={handleKeyDown} tabIndex={0}>
         {/* Header */}
         <section className="py-16 bg-gradient-to-b from-primary/10 to-background">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Engineering Portfolio
             </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              2025-2026 INTO THE DEEP Season | Team 23442 Wolverines
-            </p>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">2025-2026 Season | Team 23442 Wolverines</p>
           </div>
         </section>
 
@@ -85,62 +104,29 @@ const Portfolio = () => {
             {/* Controls */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goToPrevious}
-                  aria-label="Previous page"
-                >
+                <Button variant="outline" size="icon" onClick={goToPrevious} aria-label="Previous page">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
                 <span className="text-sm text-muted-foreground min-w-[100px] text-center">
                   Page {currentPage + 1} of {portfolioPages.length}
                 </span>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={goToNext}
-                  aria-label="Next page"
-                >
+                <Button variant="outline" size="icon" onClick={goToNext} aria-label="Next page">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setIsZoomed(!isZoomed)}
-                  aria-label={isZoomed ? "Zoom out" : "Zoom in"}
-                >
-                  {isZoomed ? (
-                    <ZoomOut className="h-4 w-4" />
-                  ) : (
-                    <ZoomIn className="h-4 w-4" />
-                  )}
+                <Button variant="outline" size="icon" onClick={() => setIsZoomed(!isZoomed)} aria-label={isZoomed ? "Zoom out" : "Zoom in"}>
+                  {isZoomed ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsFullscreen(true)}
-                >
+                <Button variant="outline" onClick={() => setIsFullscreen(true)}>
                   View Fullscreen
                 </Button>
               </div>
             </div>
 
             {/* Current Page Display */}
-            <div
-              className={`relative bg-card border rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${
-                isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
-              }`}
-              onClick={() => setIsZoomed(!isZoomed)}
-            >
-              <img
-                src={portfolioPages[currentPage].src}
-                alt={`Portfolio page ${currentPage + 1}: ${portfolioPages[currentPage].title}`}
-                className={`w-full h-auto transition-transform duration-300 ${
-                  isZoomed ? "scale-150" : "scale-100"
-                }`}
-              />
+            <div className={`relative bg-card border rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"}`} onClick={() => setIsZoomed(!isZoomed)}>
+              <img src={portfolioPages[currentPage].src} alt={`Portfolio page ${currentPage + 1}: ${portfolioPages[currentPage].title}`} className={`w-full h-auto transition-transform duration-300 ${isZoomed ? "scale-150" : "scale-100"}`} />
             </div>
 
             {/* Page Title */}
@@ -150,73 +136,35 @@ const Portfolio = () => {
 
             {/* Thumbnail Navigation */}
             <div className="mt-8 grid grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-2">
-              {portfolioPages.map((page, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    setCurrentPage(index);
-                    setIsZoomed(false);
-                  }}
-                  className={`relative aspect-[3/4] rounded overflow-hidden border-2 transition-all ${
-                    currentPage === index
-                      ? "border-primary ring-2 ring-primary/50"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <img
-                    src={page.src}
-                    alt={`Page ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+              {portfolioPages.map((page, index) => <button key={index} onClick={() => {
+            setCurrentPage(index);
+            setIsZoomed(false);
+          }} className={`relative aspect-[3/4] rounded overflow-hidden border-2 transition-all ${currentPage === index ? "border-primary ring-2 ring-primary/50" : "border-border hover:border-primary/50"}`}>
+                  <img src={page.src} alt={`Page ${index + 1}`} className="w-full h-full object-cover" loading="lazy" />
                   <span className="absolute bottom-0 left-0 right-0 bg-background/80 text-[10px] text-center py-0.5">
                     {index + 1}
                   </span>
-                </button>
-              ))}
+                </button>)}
             </div>
           </div>
         </section>
 
         {/* Fullscreen Modal */}
-        {isFullscreen && (
-          <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-4 right-4 text-white hover:bg-white/20"
-              onClick={() => setIsFullscreen(false)}
-            >
+        {isFullscreen && <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+            <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-white hover:bg-white/20" onClick={() => setIsFullscreen(false)}>
               <X className="h-6 w-6" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
-              onClick={goToPrevious}
-            >
+            <Button variant="ghost" size="icon" className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20" onClick={goToPrevious}>
               <ChevronLeft className="h-8 w-8" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
-              onClick={goToNext}
-            >
+            <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20" onClick={goToNext}>
               <ChevronRight className="h-8 w-8" />
             </Button>
-            <img
-              src={portfolioPages[currentPage].src}
-              alt={`Portfolio page ${currentPage + 1}`}
-              className="max-h-[90vh] max-w-[90vw] object-contain"
-            />
+            <img src={portfolioPages[currentPage].src} alt={`Portfolio page ${currentPage + 1}`} className="max-h-[90vh] max-w-[90vw] object-contain" />
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
               Page {currentPage + 1} of {portfolioPages.length} — {portfolioPages[currentPage].title}
             </div>
-          </div>
-        )}
-    </div>
-  );
+          </div>}
+    </div>;
 };
-
 export default Portfolio;
