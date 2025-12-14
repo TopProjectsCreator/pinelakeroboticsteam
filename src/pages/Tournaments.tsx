@@ -4,14 +4,16 @@ import { Calendar, MapPin, Trophy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import robot2024 from "@/assets/robot-detail.jpg";
 const Tournaments = () => {
-  const upcomingEvents = [{
+  const inProgressEvents = [{
     name: "Tesla League Tournament",
     date: "December 14, 2025",
     location: "Beaver Lake Middle School",
     league: "Tesla",
-    status: "upcoming",
+    status: "in-progress",
     link: "https://ftc-events.firstinspires.org/2025/USWATELT"
   }];
+
+  const upcomingEvents: typeof inProgressEvents = [];
 
   const pastEvents = [{
     name: "Spencer League Meet 2",
@@ -107,43 +109,89 @@ const Tournaments = () => {
           </div>
         </section>
 
+        {/* In Progress Events */}
+        {inProgressEvents.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-3xl font-orbitron font-bold mb-8">🔴 Live Now</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {inProgressEvents.map((event, index) => (
+                <Card key={index} className="hover:shadow-glow transition-shadow border-2 border-primary animate-pulse-slow">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="mb-2">{event.name}</CardTitle>
+                        <CardDescription>
+                          <Badge variant="outline">{event.league} League</Badge>
+                        </CardDescription>
+                      </div>
+                      <Badge className="bg-red-500 hover:bg-red-600 animate-pulse">In Progress</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="w-4 h-4" />
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="w-4 h-4" />
+                        <span>{event.location}</span>
+                      </div>
+                      <a href={event.link} target="_blank" rel="noopener noreferrer" className="block mt-4">
+                        <Button variant="default" size="sm" className="w-full group">
+                          Live Event Details
+                          <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </a>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Upcoming Events */}
-        <section className="mb-16">
-          <h2 className="text-3xl font-orbitron font-bold mb-8">Upcoming Events</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {upcomingEvents.map((event, index) => <Card key={index} className="hover:shadow-glow transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="mb-2">{event.name}</CardTitle>
-                      <CardDescription>
-                        <Badge variant="outline">{event.league} League</Badge>
-                      </CardDescription>
+        {upcomingEvents.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-3xl font-orbitron font-bold mb-8">Upcoming Events</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {upcomingEvents.map((event, index) => (
+                <Card key={index} className="hover:shadow-glow transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="mb-2">{event.name}</CardTitle>
+                        <CardDescription>
+                          <Badge variant="outline">{event.league} League</Badge>
+                        </CardDescription>
+                      </div>
+                      <Badge variant="default">Upcoming</Badge>
                     </div>
-                    <Badge variant="default">Upcoming</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Calendar className="w-4 h-4" />
-                      <span>{event.date}</span>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Calendar className="w-4 h-4" />
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <MapPin className="w-4 h-4" />
+                        <span>{event.location}</span>
+                      </div>
+                      <a href={event.link} target="_blank" rel="noopener noreferrer" className="block mt-4">
+                        <Button variant="outline" size="sm" className="w-full group">
+                          Event Details
+                          <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </a>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4" />
-                      <span>{event.location}</span>
-                    </div>
-                    <a href={event.link} target="_blank" rel="noopener noreferrer" className="block mt-4">
-                      <Button variant="outline" size="sm" className="w-full group">
-                        Event Details
-                        <ExternalLink className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>)}
-          </div>
-        </section>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Past League Events */}
         <section className="mb-16">
