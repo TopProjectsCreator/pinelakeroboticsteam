@@ -20,7 +20,8 @@ import page14 from "@/assets/portfolio/page-14.jpg";
 import page15 from "@/assets/portfolio/page-15.jpg";
 const portfolioPages = [{
   src: page1,
-  title: "Cover"
+  title: "Cover",
+  rotate: -90
 }, {
   src: page2,
   title: "Our Team"
@@ -32,7 +33,8 @@ const portfolioPages = [{
   title: "Robot Architecture"
 }, {
   src: page5,
-  title: "Engineering Process"
+  title: "Engineering Process",
+  rotate: -90
 }, {
   src: page6,
   title: "Robot Architecture 2"
@@ -126,7 +128,12 @@ const Portfolio = () => {
 
             {/* Current Page Display */}
             <div className={`relative bg-card border rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"}`} onClick={() => setIsZoomed(!isZoomed)}>
-              <img src={portfolioPages[currentPage].src} alt={`Portfolio page ${currentPage + 1}: ${portfolioPages[currentPage].title}`} className={`w-full h-auto transition-transform duration-300 ${isZoomed ? "scale-150" : "scale-100"}`} />
+              <img 
+                src={portfolioPages[currentPage].src} 
+                alt={`Portfolio page ${currentPage + 1}: ${portfolioPages[currentPage].title}`} 
+                className={`w-full h-auto transition-transform duration-300 ${isZoomed ? "scale-150" : "scale-100"}`}
+                style={portfolioPages[currentPage].rotate ? { transform: `rotate(${portfolioPages[currentPage].rotate}deg)` } : undefined}
+              />
             </div>
 
             {/* Page Title */}
@@ -160,7 +167,12 @@ const Portfolio = () => {
             <Button variant="ghost" size="icon" className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20" onClick={goToNext}>
               <ChevronRight className="h-8 w-8" />
             </Button>
-            <img src={portfolioPages[currentPage].src} alt={`Portfolio page ${currentPage + 1}`} className="max-h-[90vh] max-w-[90vw] object-contain" />
+            <img 
+              src={portfolioPages[currentPage].src} 
+              alt={`Portfolio page ${currentPage + 1}`} 
+              className="max-h-[90vh] max-w-[90vw] object-contain"
+              style={portfolioPages[currentPage].rotate ? { transform: `rotate(${portfolioPages[currentPage].rotate}deg)` } : undefined}
+            />
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
               Page {currentPage + 1} of {portfolioPages.length} — {portfolioPages[currentPage].title}
             </div>
