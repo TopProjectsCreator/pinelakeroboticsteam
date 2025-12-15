@@ -4,18 +4,17 @@ import { Calendar, MapPin, Trophy, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import robot2024 from "@/assets/robot-detail.jpg";
 const Tournaments = () => {
-  const inProgressEvents = [{
-    name: "Tesla League Tournament",
-    date: "December 14, 2025",
-    location: "Beaver Lake Middle School",
-    league: "Tesla",
-    status: "in-progress",
-    link: "https://ftc-events.firstinspires.org/2025/USWATELT"
-  }];
+  const inProgressEvents: { name: string; date: string; location: string; league: string; status?: string; link: string }[] = [];
 
   const upcomingEvents: typeof inProgressEvents = [];
 
   const pastEvents = [{
+    name: "Tesla League Tournament",
+    date: "December 14, 2025",
+    location: "Beaver Lake Middle School",
+    league: "Tesla",
+    link: "https://ftc-events.firstinspires.org/2025/USWATELT"
+  }, {
     name: "Spencer League Meet 2",
     date: "November 22, 2025",
     location: "Beaver Lake Middle School",
