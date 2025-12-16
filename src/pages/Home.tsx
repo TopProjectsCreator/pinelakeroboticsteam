@@ -20,7 +20,7 @@ const Home = () => {
         .from("blog_posts")
         .select("*")
         .order("published_at", { ascending: false })
-        .limit(3);
+        .limit(2);
       if (error) throw error;
       return data.map(post => ({
         id: post.slug,
@@ -190,8 +190,8 @@ const Home = () => {
           </div>
           
           {postsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {[1, 2, 3].map((i) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {[1, 2].map((i) => (
                 <Card key={i}>
                   <CardHeader>
                     <Skeleton className="h-6 w-24 mb-2" />
@@ -209,7 +209,7 @@ const Home = () => {
               <p className="text-muted-foreground">No blog posts yet. Check back soon!</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {recentPosts.map((post) => (
                 <Card key={post.id} className="hover:shadow-glow transition-all group">
                   <CardHeader>
