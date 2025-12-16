@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { PortfolioPageImage } from "@/components/portfolio/PortfolioPageImage";
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, X } from "lucide-react";
 
 // Import portfolio pages
@@ -131,22 +132,13 @@ const Portfolio = () => {
           </div>
 
           {/* Current Page Display */}
-          <div
-            className={`relative bg-card border rounded-lg overflow-hidden shadow-lg ${
-              isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
-            } ${currentPageData.rotated ? "aspect-[3/4]" : ""}`}
-            onClick={() => !currentPageData.rotated && setIsZoomed(!isZoomed)}
-          >
-            <img
-              src={currentPageData.src}
-              alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
-              className={`transition-transform duration-300 ${
-                currentPageData.rotated
-                  ? "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 h-full w-auto"
-                  : `w-full h-auto ${isZoomed ? "scale-150" : "scale-100"}`
-              }`}
-            />
-          </div>
+          <PortfolioPageImage
+            src={currentPageData.src}
+            alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
+            rotated={!!currentPageData.rotated}
+            zoomed={isZoomed}
+            onToggleZoom={() => setIsZoomed(!isZoomed)}
+          />
 
           {/* Page Title */}
           <p className="text-center text-muted-foreground mt-4 text-lg">
@@ -171,7 +163,7 @@ const Portfolio = () => {
                 <img
                   src={page.src}
                   alt={`Portfolio page ${index + 1}: ${page.title}`}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${page.rotated ? "-rotate-90" : ""}`}
                   loading="lazy"
                 />
                 <span className="absolute bottom-0 left-0 right-0 bg-background/80 text-[10px] text-center py-0.5">
@@ -215,7 +207,7 @@ const Portfolio = () => {
             alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
             className={`object-contain ${
               currentPageData.rotated
-                ? "max-w-[90vh] max-h-[90vw] rotate-90"
+                ? "max-w-[90vh] max-h-[90vw] -rotate-90"
                 : "max-h-[90vh] max-w-[90vw]"
             }`}
           />
