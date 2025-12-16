@@ -1,13 +1,41 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import { Trophy, Users, Calendar, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 import heroImage from "@/assets/robot-hero.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
 import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
+
 const Home = () => {
+  const { data: recentPosts = [], isLoading: postsLoading } = useQuery({
+    queryKey: ["recent-blog-posts"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("*")
+        .order("published_at", { ascending: false })
+        .limit(3);
+      if (error) throw error;
+      return data.map(post => ({
+        id: post.slug,
+        title: post.title,
+        excerpt: post.excerpt,
+        category: post.category,
+        readTime: post.read_time,
+        date: new Date(post.published_at).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        })
+      }));
+    }
+  });
   useEffect(() => {
     const faqSchema = {
       "@context": "https://schema.org",
@@ -147,6 +175,79 @@ const Home = () => {
             <div className="order-1 lg:order-2">
               <img src={teamPhoto2025} alt="Wolverines Team 23442 - 2025 Season" className="rounded-2xl shadow-card w-full h-auto" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Preview Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-orbitron font-bold mb-4 text-blue-900">Latest from Our Blog</h2>
+            <p className="text-lg text-muted-foreground">
+              Updates, insights, and stories from the Wolverines
+            </p>
+          </div>
+          
+          {postsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {[1, 2, 3].map((i) => (
+                <Card key={i}>
+                  <CardHeader>
+                    <Skeleton className="h-6 w-24 mb-2" />
+                    <Skeleton className="h-8 w-full mb-2" />
+                    <Skeleton className="h-4 w-32" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-16 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : recentPosts.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">No blog posts yet. Check back soon!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              {recentPosts.map((post) => (
+                <Card key={post.id} className="hover:shadow-glow transition-all group">
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="secondary">{post.category}</Badge>
+                      <span className="text-sm text-muted-foreground">{post.readTime}</span>
+                    </div>
+                    <CardTitle className="group-hover:text-primary transition-colors line-clamp-2">
+                      {post.title}
+                    </CardTitle>
+                    <CardDescription className="flex items-center gap-2 mt-2">
+                      <Calendar className="w-4 h-4" />
+                      {post.date}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground line-clamp-2 mb-4">
+                      {post.excerpt}
+                    </p>
+                    <Link to={`/blog/${post.id}`}>
+                      <Button variant="ghost" className="group/btn w-full">
+                        Read More
+                        <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+          
+          <div className="text-center mt-8">
+            <Link to="/blog">
+              <Button variant="outline" size="lg" className="group">
+                View All Posts
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
