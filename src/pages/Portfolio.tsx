@@ -177,11 +177,11 @@ const Portfolio = () => {
 
       {/* Fullscreen Modal */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-16">
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 text-white hover:bg-white/20"
+            className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
             onClick={() => setIsFullscreen(false)}
           >
             <X className="h-6 w-6" />
@@ -189,7 +189,7 @@ const Portfolio = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
             onClick={goToPrevious}
           >
             <ChevronLeft className="h-8 w-8" />
@@ -197,19 +197,18 @@ const Portfolio = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
             onClick={goToNext}
           >
             <ChevronRight className="h-8 w-8" />
           </Button>
-          <img
+          <PortfolioPageImage
             src={currentPageData.src}
             alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
-            className={`object-contain ${
-              currentPageData.rotated
-                ? "max-w-[90vh] max-h-[90vw] -rotate-90"
-                : "max-h-[90vh] max-w-[90vw]"
-            }`}
+            rotated={!!currentPageData.rotated}
+            zoomed={false}
+            onToggleZoom={() => {}}
+            className="w-full h-full cursor-default"
           />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
             Page {currentPage + 1} of {portfolioPages.length} —{" "}

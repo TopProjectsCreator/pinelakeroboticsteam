@@ -53,8 +53,9 @@ export function PortfolioPageImage({
     return (
       <div
         className={cn(
-          "relative bg-card border rounded-lg overflow-hidden shadow-lg",
-          zoomed ? "cursor-zoom-out" : "cursor-zoom-in",
+          "relative overflow-hidden",
+          !className?.includes("cursor-default") && (zoomed ? "cursor-zoom-out" : "cursor-zoom-in"),
+          !className?.includes("w-full h-full") && "bg-card border rounded-lg shadow-lg",
           className
         )}
         onClick={onToggleZoom}
@@ -63,7 +64,8 @@ export function PortfolioPageImage({
           src={src}
           alt={alt}
           className={cn(
-            "w-full h-auto transition-transform duration-300",
+            "transition-transform duration-300",
+            className?.includes("w-full h-full") ? "w-full h-full object-contain" : "w-full h-auto",
             zoomed ? "scale-150" : "scale-100"
           )}
         />
@@ -75,8 +77,10 @@ export function PortfolioPageImage({
     <div
       ref={containerRef}
       className={cn(
-        "relative bg-card border rounded-lg overflow-hidden shadow-lg aspect-[3/4]",
-        zoomed ? "cursor-zoom-out" : "cursor-zoom-in",
+        "relative overflow-hidden",
+        !className?.includes("cursor-default") && (zoomed ? "cursor-zoom-out" : "cursor-zoom-in"),
+        !className?.includes("w-full h-full") && "bg-card border rounded-lg shadow-lg aspect-[3/4]",
+        className?.includes("w-full h-full") && "w-full h-full",
         className
       )}
       onClick={onToggleZoom}
