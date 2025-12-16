@@ -20,11 +20,11 @@ import page14 from "@/assets/portfolio/page-14.jpg";
 import page15 from "@/assets/portfolio/page-15.jpg";
 
 const portfolioPages = [
-  { src: page1, title: "Cover" },
+  { src: page1, title: "Cover", rotated: true },
   { src: page2, title: "Our Team" },
   { src: page3, title: "Game Strategy" },
   { src: page4, title: "Robot Architecture" },
-  { src: page5, title: "Engineering Process" },
+  { src: page5, title: "Engineering Process", rotated: true },
   { src: page6, title: "Robot Architecture 2" },
   { src: page7, title: "Robot Upgrades" },
   { src: page8, title: "Robot Overviews" },
@@ -134,14 +134,16 @@ const Portfolio = () => {
           <div
             className={`relative bg-card border rounded-lg overflow-hidden shadow-lg ${
               isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
-            }`}
-            onClick={() => setIsZoomed(!isZoomed)}
+            } ${currentPageData.rotated ? "aspect-[3/4]" : ""}`}
+            onClick={() => !currentPageData.rotated && setIsZoomed(!isZoomed)}
           >
             <img
               src={currentPageData.src}
               alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
-              className={`w-full h-auto transition-transform duration-300 ${
-                isZoomed ? "scale-150" : "scale-100"
+              className={`transition-transform duration-300 ${
+                currentPageData.rotated
+                  ? "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90 h-full w-auto"
+                  : `w-full h-auto ${isZoomed ? "scale-150" : "scale-100"}`
               }`}
             />
           </div>
@@ -211,7 +213,11 @@ const Portfolio = () => {
           <img
             src={currentPageData.src}
             alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
-            className="max-h-[90vh] max-w-[90vw] object-contain"
+            className={`object-contain ${
+              currentPageData.rotated
+                ? "max-w-[90vh] max-h-[90vw] rotate-90"
+                : "max-h-[90vh] max-w-[90vw]"
+            }`}
           />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
             Page {currentPage + 1} of {portfolioPages.length} —{" "}
