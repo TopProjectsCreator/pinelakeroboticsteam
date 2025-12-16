@@ -18,100 +18,24 @@ import page12 from "@/assets/portfolio/page-12.jpg";
 import page13 from "@/assets/portfolio/page-13.jpg";
 import page14 from "@/assets/portfolio/page-14.jpg";
 import page15 from "@/assets/portfolio/page-15.jpg";
-const portfolioPages = [{
-  src: page1,
-  title: "Cover",
-  rotated: true
-}, {
-  src: page2,
-  title: "Our Team"
-}, {
-  src: page3,
-  title: "Game Strategy"
-}, {
-  src: page4,
-  title: "Robot Architecture"
-}, {
-  src: page5,
-  title: "Engineering Process",
-  rotated: true
-}, {
-  src: page6,
-  title: "Robot Architecture 2"
-}, {
-  src: page7,
-  title: "Robot Upgrades"
-}, {
-  src: page8,
-  title: "Robot Overviews"
-}, {
-  src: page9,
-  title: "Programming"
-}, {
-  src: page10,
-  title: "Obstacles"
-}, {
-  src: page11,
-  title: "Lessons Learned"
-}, {
-  src: page12,
-  title: "Lessons Learned 2"
-}, {
-  src: page13,
-  title: "Outreach"
-}, {
-  src: page14,
-  title: "Sponsors & Practice"
-}, {
-  src: page15,
-  title: "Mentors"
-}];
+const portfolioPages = [
+  { src: page1, title: "Cover" },
+  { src: page2, title: "Our Team" },
+  { src: page3, title: "Game Strategy" },
+  { src: page4, title: "Robot Architecture" },
+  { src: page5, title: "Engineering Process" },
+  { src: page6, title: "Robot Architecture 2" },
+  { src: page7, title: "Robot Upgrades" },
+  { src: page8, title: "Robot Overviews" },
+  { src: page9, title: "Programming" },
+  { src: page10, title: "Obstacles" },
+  { src: page11, title: "Lessons Learned" },
+  { src: page12, title: "Lessons Learned 2" },
+  { src: page13, title: "Outreach" },
+  { src: page14, title: "Sponsors & Practice" },
+  { src: page15, title: "Mentors" },
+];
 
-const PortfolioImage = ({ 
-  src, 
-  alt, 
-  rotated, 
-  isZoomed, 
-  isFullscreen 
-}: { 
-  src: string; 
-  alt: string; 
-  rotated?: boolean; 
-  isZoomed?: boolean;
-  isFullscreen?: boolean;
-}) => {
-  if (rotated) {
-    return (
-      <div className={`relative ${isFullscreen ? 'max-h-[90vh] max-w-[90vw]' : 'w-full'}`}>
-        <img 
-          src={src} 
-          alt={alt} 
-          className={`w-full h-auto -rotate-90 origin-center ${
-            isFullscreen 
-              ? 'max-h-[90vh] max-w-[90vw] object-contain' 
-              : isZoomed 
-                ? 'scale-150' 
-                : ''
-          }`}
-        />
-      </div>
-    );
-  }
-  
-  return (
-    <img 
-      src={src} 
-      alt={alt} 
-      className={`w-full h-auto transition-transform duration-300 ${
-        isFullscreen 
-          ? 'max-h-[90vh] max-w-[90vw] object-contain' 
-          : isZoomed 
-            ? 'scale-150' 
-            : 'scale-100'
-      }`}
-    />
-  );
-};
 
 const Portfolio = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -174,16 +98,14 @@ const Portfolio = () => {
               </Button>
             </div>
             <div className="flex items-center gap-2">
-              {!currentPageData.rotated && (
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  onClick={() => setIsZoomed(!isZoomed)} 
-                  aria-label={isZoomed ? "Zoom out" : "Zoom in"}
-                >
-                  {isZoomed ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
-                </Button>
-              )}
+              <Button 
+                variant="outline" 
+                size="icon" 
+                onClick={() => setIsZoomed(!isZoomed)} 
+                aria-label={isZoomed ? "Zoom out" : "Zoom in"}
+              >
+                {isZoomed ? <ZoomOut className="h-4 w-4" /> : <ZoomIn className="h-4 w-4" />}
+              </Button>
               <Button variant="outline" onClick={() => setIsFullscreen(true)}>
                 View Fullscreen
               </Button>
@@ -193,15 +115,16 @@ const Portfolio = () => {
           {/* Current Page Display */}
           <div 
             className={`relative bg-card border rounded-lg overflow-hidden shadow-lg ${
-              !currentPageData.rotated ? (isZoomed ? "cursor-zoom-out" : "cursor-zoom-in") : ""
+              isZoomed ? "cursor-zoom-out" : "cursor-zoom-in"
             }`} 
-            onClick={() => !currentPageData.rotated && setIsZoomed(!isZoomed)}
+            onClick={() => setIsZoomed(!isZoomed)}
           >
-            <PortfolioImage 
+            <img
               src={currentPageData.src}
               alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
-              rotated={currentPageData.rotated}
-              isZoomed={isZoomed}
+              className={`w-full h-auto transition-transform duration-300 ${
+                isZoomed ? "scale-150" : "scale-100"
+              }`}
             />
           </div>
 
@@ -227,8 +150,8 @@ const Portfolio = () => {
               >
                 <img 
                   src={page.src} 
-                  alt={`Page ${index + 1}`} 
-                  className={`w-full h-full object-cover ${page.rotated ? '-rotate-90' : ''}`}
+                  alt={`Portfolio page ${index + 1}: ${page.title}`} 
+                  className="w-full h-full object-cover"
                   loading="lazy" 
                 />
                 <span className="absolute bottom-0 left-0 right-0 bg-background/80 text-[10px] text-center py-0.5">
@@ -267,11 +190,10 @@ const Portfolio = () => {
           >
             <ChevronRight className="h-8 w-8" />
           </Button>
-          <PortfolioImage 
+          <img
             src={currentPageData.src}
-            alt={`Portfolio page ${currentPage + 1}`}
-            rotated={currentPageData.rotated}
-            isFullscreen={true}
+            alt={`Portfolio page ${currentPage + 1}: ${currentPageData.title}`}
+            className="max-h-[90vh] max-w-[90vw] object-contain"
           />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm">
             Page {currentPage + 1} of {portfolioPages.length} — {currentPageData.title}
