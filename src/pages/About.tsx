@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink, Github } from "lucide-react";
+import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink, Github, Youtube } from "lucide-react";
 import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
 import maxsimPhoto from "@/assets/team/maxsim.jpg";
 import simPhoto from "@/assets/team/sim.jpg";
@@ -31,6 +31,11 @@ const About = () => {
             <Button asChild variant="outline" size="lg">
               <a href="https://github.com/EdwardCasler/FtcRobotController" target="_blank" rel="noopener noreferrer" className="gap-2">
                 <Github className="w-4 h-4" /> View Our Code
+              </a>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <a href="https://www.youtube.com/@FTC23442" target="_blank" rel="noopener noreferrer" className="gap-2">
+                <Youtube className="w-4 h-4" /> YouTube
               </a>
             </Button>
           </div>
