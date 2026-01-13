@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
+import { MapPin, Youtube } from "lucide-react";
 import wolverinesLogo from "@/assets/wolverines-logo.png";
 const Footer = () => {
   return <footer className="bg-card border-t border-border mt-20">
@@ -55,9 +55,16 @@ const Footer = () => {
                 <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
                 <span>Sammamish, WA, USA</span>
               </li>
-              <li className="flex items-start gap-2 text-muted-foreground">
-                
-                
+              <li>
+                <a 
+                  href="https://www.youtube.com/@FTC23442" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Youtube className="w-5 h-5" />
+                  <span>YouTube</span>
+                </a>
               </li>
             </ul>
           </div>
