@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ContactRichTextEditor } from "@/components/ContactRichTextEditor";
 import { z } from "zod";
 
 const contactSchema = z.object({
@@ -124,19 +124,12 @@ const Contact = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
-              <Textarea
-                id="message"
+              <Label>Message</Label>
+              <ContactRichTextEditor
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Tell us what's on your mind..."
-                className="min-h-[150px]"
+                onChange={setMessage}
                 maxLength={5000}
-                required
               />
-              <p className="text-xs text-muted-foreground">
-                {message.length}/5000 characters
-              </p>
             </div>
 
             <Button type="submit" className="w-full" disabled={isLoading}>
