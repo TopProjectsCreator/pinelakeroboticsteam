@@ -231,6 +231,46 @@ const Tournaments = () => {
             ))}
           </div>
         </section>
+        {/* Season Timeline */}
+        <section className="mb-16">
+          <h2 className="text-3xl font-orbitron font-bold mb-10 text-center">Our Journey</h2>
+          <div className="relative max-w-3xl mx-auto">
+            {/* Vertical line */}
+            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-border md:-translate-x-px" />
+
+            {[
+              { year: "2023", season: "CENTERSTAGE", side: "left", items: ["Team founded at PLMS", "Rookie season kickoff", "First competition experience", "Learned the ropes of FTC"] },
+              { year: "2024", season: "INTO THE DEEP", side: "right", items: ["Advanced autonomous programming", "Competed in regional tournaments", "Improved mechanical design", "Grew team skills & confidence"] },
+              { year: "2025", season: "DECODE", side: "left", items: ["Joined Spencer & Tesla leagues", "3 league events completed", "Stronger team collaboration", "Season still in progress!"] },
+            ].map((entry, i) => (
+              <div key={i} className={`relative flex items-start mb-12 ${i === 2 ? 'mb-0' : ''} md:${entry.side === 'left' ? 'flex-row' : 'flex-row-reverse'}`}>
+                {/* Dot */}
+                <div className="absolute left-6 md:left-1/2 w-4 h-4 bg-primary rounded-full border-4 border-background -translate-x-1/2 mt-1 z-10" />
+
+                {/* Content card */}
+                <div className={`ml-14 md:ml-0 md:w-[calc(50%-2rem)] ${entry.side === 'left' ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}`}>
+                  <Card className="hover:shadow-glow transition-shadow">
+                    <CardHeader className="pb-3">
+                      <Badge className="w-fit mb-1">{entry.year}</Badge>
+                      <CardTitle className="text-lg">{entry.season}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-1.5">
+                        {entry.items.map((item, idx) => (
+                          <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* Past Seasons */}
         <section>
           <h2 className="text-3xl font-orbitron font-bold mb-8">Past Seasons</h2>
