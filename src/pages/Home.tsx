@@ -11,6 +11,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import heroImage from "@/assets/robot-hero.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
 import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
+import teamWorkspace from "@/assets/team-workspace.jpg";
+import teamBuilding from "@/assets/team-building.jpg";
+import teamShopping from "@/assets/team-shopping.jpg";
 
 const Home = () => {
   const { data: recentPosts = [], isLoading: postsLoading } = useQuery({
@@ -151,6 +154,18 @@ const Home = () => {
                 <p className="text-muted-foreground">League Competitions</p>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Team in Action Gallery */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-orbitron font-bold mb-8 text-center text-blue-900">Team in Action</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <img src={teamWorkspace} alt="Team setting up workspace" className="rounded-xl shadow-card w-full h-64 object-cover" />
+            <img src={teamBuilding} alt="Team members building the robot field" className="rounded-xl shadow-card w-full h-64 object-cover" />
+            <img src={teamShopping} alt="Team shopping for parts and supplies" className="rounded-xl shadow-card w-full h-64 object-cover" />
           </div>
         </div>
       </section>

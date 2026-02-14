@@ -11,6 +11,8 @@ import aryaPhoto from "@/assets/team/arya.jpg";
 import edwardPhoto from "@/assets/team/edward.jpg";
 import adityaPhoto from "@/assets/team/aditya.jpg";
 import shriyashPhoto from "@/assets/team/shriyash.jpg";
+import teamWorkspace from "@/assets/team-workspace.jpg";
+import teamBuilding from "@/assets/team-building.jpg";
 const About = () => {
   return <div className="min-h-screen py-20">
       <div className="container mx-auto px-4">
@@ -59,6 +61,14 @@ const About = () => {
             <p>
               We compete in both the Spencer and Tesla leagues in Washington State, participating in the FIRST Tech Challenge program. Each season brings new challenges, new opportunities to learn, and new ways to grow as engineers and teammates.
             </p>
+          </div>
+        </section>
+
+        {/* Action Photos */}
+        <section className="mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <img src={teamWorkspace} alt="Team setting up workspace" className="rounded-2xl shadow-card w-full h-72 object-cover" />
+            <img src={teamBuilding} alt="Team members building the robot field" className="rounded-2xl shadow-card w-full h-72 object-cover" />
           </div>
         </section>
 
