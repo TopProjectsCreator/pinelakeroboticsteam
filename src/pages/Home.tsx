@@ -19,13 +19,13 @@ const Home = () => {
   const { data: recentPosts = [], isLoading: postsLoading } = useQuery({
     queryKey: ["recent-blog-posts"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("blog_posts")
-        .select("*")
-        .order("published_at", { ascending: false })
-        .limit(2);
+      const { data, error } = await supabase.
+      from("blog_posts").
+      select("*").
+      order("published_at", { ascending: false }).
+      limit(2);
       if (error) throw error;
-      return data.map(post => ({
+      return data.map((post) => ({
         id: post.slug,
         title: post.title,
         excerpt: post.excerpt,
@@ -159,16 +159,16 @@ const Home = () => {
       </section>
 
       {/* Team in Action Gallery */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-orbitron font-bold mb-8 text-center text-blue-900">Team in Action</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <img src={teamWorkspace} alt="Team setting up workspace" className="rounded-xl shadow-card w-full h-64 object-cover" />
-            <img src={teamBuilding} alt="Team members building the robot field" className="rounded-xl shadow-card w-full h-64 object-cover" />
-            <img src={teamShopping} alt="Team shopping for parts and supplies" className="rounded-xl shadow-card w-full h-64 object-cover" />
-          </div>
-        </div>
-      </section>
+      
+
+
+
+
+
+
+
+
+
 
       {/* About Preview */}
       <section className="py-20">
@@ -204,10 +204,10 @@ const Home = () => {
             </p>
           </div>
           
-          {postsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              {[1, 2].map((i) => (
-                <Card key={i}>
+          {postsLoading ?
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {[1, 2].map((i) =>
+          <Card key={i}>
                   <CardHeader>
                     <Skeleton className="h-6 w-24 mb-2" />
                     <Skeleton className="h-8 w-full mb-2" />
@@ -217,16 +217,16 @@ const Home = () => {
                     <Skeleton className="h-16 w-full" />
                   </CardContent>
                 </Card>
-              ))}
-            </div>
-          ) : recentPosts.length === 0 ? (
-            <div className="text-center py-8">
+          )}
+            </div> :
+        recentPosts.length === 0 ?
+        <div className="text-center py-8">
               <p className="text-muted-foreground">No blog posts yet. Check back soon!</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              {recentPosts.map((post) => (
-                <Card key={post.id} className="hover:shadow-glow transition-all group">
+            </div> :
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {recentPosts.map((post) =>
+          <Card key={post.id} className="hover:shadow-glow transition-all group">
                   <CardHeader>
                     <div className="flex items-center justify-between mb-2">
                       <Badge variant="secondary">{post.category}</Badge>
@@ -252,9 +252,9 @@ const Home = () => {
                     </Link>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
           )}
+            </div>
+        }
           
           <div className="text-center mt-8">
             <Link to="/blog">
