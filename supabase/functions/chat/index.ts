@@ -75,7 +75,11 @@ Current Stats:
    - Team was not prepared for all aspects of the tournament, and ended up failing to remember doing a presentation
    - Team ranked 21st our of 22 teams, only beating team Lux Mechanica #30789
    - Team won the Judges Choice award
+   - Engineering portfolio at https://pinelakeroboticsteam.lovable.app/portfolio
    - Wins-Losses-Ties: 1-4-0
+=== CURRENT SEASON ===
+
+Currently it is the offseason for the team, however they are getting ready for the 2026-2027 season BIOBUZZ by making the preseason robot and getting this site up to date.
 
 === TEAM MEMBERS & ROLES ===
 Build Team (5 members):
@@ -224,7 +228,7 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
   } catch (e) {
     // Log detailed error server-side for debugging
     console.error("chat error:", e);
-    
+
     // Return generic error message to client
     return new Response(JSON.stringify({ error: "An error occurred. Please try again later." }), {
       status: 500,
