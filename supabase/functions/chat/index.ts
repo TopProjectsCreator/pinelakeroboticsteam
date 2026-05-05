@@ -69,7 +69,7 @@ Current Stats:
    Date: December 14, 2025
    Location: Beaver Lake Middle School
    Link: https://ftc-events.firstinspires.org/2025/USWATELT
-   Status: UPCOMING
+   Status: COMPLETED
    - Major interleague competition
    - Team prepared a brand-new robot with ground intake
    - Team was not prepared for all aspects of the tournament, and ended up failing to remember doing a presentation
