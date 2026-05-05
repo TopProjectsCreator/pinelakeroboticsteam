@@ -65,14 +65,17 @@ Current Stats:
    - Learned critical lessons about inspection
    - Backup drivers stepped up when lead driver was absent
 
-=== UPCOMING EVENTS ===
-1. Tesla League Tournament
+3. Tesla League Tournament
    Date: December 14, 2025
    Location: Beaver Lake Middle School
    Link: https://ftc-events.firstinspires.org/2025/USWATELT
    Status: UPCOMING
    - Major interleague competition
-   - Team is preparing a brand-new robot with ground intake
+   - Team prepared a brand-new robot with ground intake
+   - Team was not prepared for all aspects of the tournament, and ended up failing to remember doing a presentation
+   - Team ranked 21st our of 22 teams, only beating team Lux Mechanica #30789
+   - Team won the Judges Choice award
+   - Wins-Losses-Ties: 1-4-0
 
 === TEAM MEMBERS & ROLES ===
 Build Team (5 members):
