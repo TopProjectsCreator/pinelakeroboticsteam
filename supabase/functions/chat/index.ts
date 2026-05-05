@@ -36,7 +36,7 @@ Location: Sammamish, Washington
 School: PLMS (Pine Lake Middle School) - This is critical: we are NOT affiliated with any other school
 Region: Washington State
 
-=== CURRENT SEASON (2025) ===
+=== LAST SEASON (2025) ===
 Season Name: DECODE
 This is the team's 3rd season competing in FIRST Tech Challenge.
 League Memberships:
@@ -107,7 +107,7 @@ Programming Details:
 
 === COMPETITION HISTORY ===
 
-2025 Season - DECODE (Current):
+2025 Season - DECODE:
 - Competing in Spencer League and Tesla League
 - Developed launcher mechanism for scoring
 - Building new robot with ground intake for Interleague
