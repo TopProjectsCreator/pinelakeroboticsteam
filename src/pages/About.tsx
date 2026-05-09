@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Compass, Lightbulb, Zap, Users, Heart, Sparkles, ExternalLink, Github, Youtube } from "lucide-react";
 import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
 import maxsimPhoto from "@/assets/team/maksim.jpg";
-import simPhoto from "@/assets/team/team-programmer.jpg";
+import simPhoto from "@/assets/team/sim.jpg";
 import janyaPhoto from "@/assets/team/janya.jpg";
 import abhiPhoto from "@/assets/team/abhi.jpg";
 import ishaanPhoto from "@/assets/team/ishaan.jpg";
