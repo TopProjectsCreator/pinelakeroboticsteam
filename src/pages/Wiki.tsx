@@ -198,7 +198,7 @@ const Wiki = () => {
               </div>
             ) : (
               <div 
-                className="prose prose-slate dark:prose-invert max-w-none"
+                className="prose prose-slate dark:prose-invert max-w-none [&_a]:text-primary [&_a]:underline [&_a:hover]:opacity-80"
                 onClick={handleContentClick}
                 dangerouslySetInnerHTML={{ __html: content }}
               />
