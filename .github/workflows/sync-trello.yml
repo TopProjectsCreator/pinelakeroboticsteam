@@ -25,13 +25,14 @@ jobs:
 
       - name: Sync Trello to GitHub Projects
         env:
-          PAT: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python3 << 'EOF'
+          python3 << 'PYEOF'
           import os, json, requests
           from github import Github
+          from github import Auth
 
-          PAT = os.environ["PAT"]
+          TOKEN = os.environ["GITHUB_TOKEN"]
           TRELLO_URL = "https://trello.com/b/mmMuZ8HO.json"
           REPO = os.environ["GITHUB_REPOSITORY"]
 
@@ -41,7 +42,8 @@ jobs:
           print(f"Board: {board['name']}")
 
           # Connect to GitHub
-          gh = Github(PAT)
+          auth = Auth.Token(TOKEN)
+          gh = Github(auth=auth)
           repo = gh.get_repo(REPO)
           owner = gh.get_user(REPO.split("/")[0])
 
@@ -97,3 +99,9 @@ jobs:
                   if members:
                       note += f"👥 Assignees: {members}\n"
                   note += f"\n🔗 [View on Trello]({card['url']})"
+                  
+                  col.create_card(note=note)
+                  print(f"Added: {card['name']}")
+
+          print("Sync complete!")
+          PYEOF
