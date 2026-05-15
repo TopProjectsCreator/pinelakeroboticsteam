@@ -1,0 +1,106 @@
+name: Sync Trello to GitHub Projects
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      projects: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests PyGithub
+
+      - name: Sync Trello to GitHub Projects
+        env:
+          PAT: ${{ secrets.PAT }}
+        run: |
+          python3 << 'EOF'
+          import os, json, requests
+          from github import Github
+
+          PAT = os.environ["PAT"]
+          TRELLO_URL = "https://trello.com/b/mmMuZ8HO.json"
+          REPO = os.environ["GITHUB_REPOSITORY"]
+
+          # Fetch Trello board
+          print("Fetching Trello board...")
+          board = requests.get(TRELLO_URL).json()
+          print(f"Board: {board['name']}")
+
+          # Connect to GitHub
+          gh = Github(PAT)
+          repo = gh.get_repo(REPO)
+          owner = gh.get_user(REPO.split("/")[0])
+
+          # Find or create project
+          project = None
+          for p in owner.get_projects():
+              if p.name == "FTC Website Build":
+                  project = p
+                  break
+
+          if not project:
+              project = owner.create_project("FTC Website Build", body="Synced from Trello")
+              print(f"Created project: {project.name}")
+          else:
+              print(f"Found project: {project.name}")
+
+          # Map Trello lists to project columns
+          list_to_column = {}
+          for lst in board["lists"]:
+              col_name = lst["name"]
+              col = None
+              for c in project.get_columns():
+                  if c.name == col_name:
+                      col = c
+                      break
+              if not col:
+                  col = project.create_column(col_name)
+              list_to_column[lst["id"]] = col
+
+          # Sync cards
+          for card in board["cards"]:
+              if card.get("closed"):
+                  continue
+              
+              col = list_to_column.get(card["idList"])
+              if not col:
+                  continue
+
+              # Check if card already exists
+              exists = False
+              for existing in col.get_cards():
+                  if existing.note and card["name"] in existing.note:
+                      exists = True
+                      break
+
+              if not exists:
+                  note = f"**{card['name']}**\n\n"
+                  if card.get("desc"):
+                      note += f"{card['desc']}\n\n"
+                  if card.get("due"):
+                      note += f"📅 Due: {card['due'][:10]}\n"
+                  members = ", ".join([m["fullName"] for m in board["members"] if m["id"] in card.get("idMembers", [])])
+                  if members:
+                      note += f"👥 Assignees: {members}\n"
+                  note += f"\n🔗 [View on Trello]({card['url']})"
+                  
+                  col.create_card(note=note)
+                  print(f"Added: {card['name']}")
+
+          print("Sync complete!")
+          EOF
