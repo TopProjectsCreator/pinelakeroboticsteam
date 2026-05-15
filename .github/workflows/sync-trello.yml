@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      projects: write
     
     steps:
       - name: Checkout repository
@@ -98,9 +97,3 @@ jobs:
                   if members:
                       note += f"👥 Assignees: {members}\n"
                   note += f"\n🔗 [View on Trello]({card['url']})"
-                  
-                  col.create_card(note=note)
-                  print(f"Added: {card['name']}")
-
-          print("Sync complete!")
-          EOF
