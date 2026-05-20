@@ -151,7 +151,7 @@ const Wiki = () => {
           </Link>
           <div className="flex items-center gap-3 mb-2">
             <BookOpen className="h-8 w-8 text-primary" />
-            <h1 className="text-4xl font-bold">FTC Robot Controller Wiki</h1>
+            <h2 className="text-4xl font-bold">FTC Robot Controller Wiki</h2>
           </div>
           <p className="text-muted-foreground">
             Documentation and guides for the FTC Robot Controller
