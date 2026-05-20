@@ -28,9 +28,10 @@ interface ContactRichTextEditorProps {
   value: string;
   onChange: (html: string) => void;
   maxLength?: number;
+  id?: string;
 }
 
-export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000 }: ContactRichTextEditorProps) => {
+export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000, id }: ContactRichTextEditorProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -50,6 +51,10 @@ export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000 }: Con
       attributes: {
         class:
           "prose prose-sm max-w-none min-h-[150px] px-3 py-2 focus:outline-none [&_p]:my-1 [&_ul]:my-1 [&_ol]:my-1",
+        ...(id ? { id } : {}),
+        role: "textbox",
+        "aria-multiline": "true",
+        "aria-label": "Message",
       },
     },
   });
