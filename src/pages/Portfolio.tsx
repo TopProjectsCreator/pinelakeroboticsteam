@@ -183,6 +183,7 @@ const Portfolio = () => {
             size="icon"
             className="absolute top-4 right-4 text-white hover:bg-white/20 z-10"
             onClick={() => setIsFullscreen(false)}
+            aria-label="Close fullscreen"
           >
             <X className="h-6 w-6" />
           </Button>
@@ -191,6 +192,7 @@ const Portfolio = () => {
             size="icon"
             className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
             onClick={goToPrevious}
+            aria-label="Previous page"
           >
             <ChevronLeft className="h-8 w-8" />
           </Button>
@@ -199,6 +201,7 @@ const Portfolio = () => {
             size="icon"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:bg-white/20 z-10"
             onClick={goToNext}
+            aria-label="Next page"
           >
             <ChevronRight className="h-8 w-8" />
           </Button>

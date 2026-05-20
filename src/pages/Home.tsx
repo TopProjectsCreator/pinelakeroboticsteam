@@ -96,7 +96,7 @@ const Home = () => {
               <span className="text-primary font-semibold">Team 23442</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-4 bg-gradient-primary bg-clip-text text-orange-600">
-              WOLVERINES
+              Wolverines — FTC Robotics Team 23442
             </h1>
             <p className="text-2xl md:text-3xl font-semibold mb-6 text-foreground">
               "All Claws on Deck!"
@@ -124,6 +124,7 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-orbitron font-bold mb-12 text-center text-blue-900">Our Impact</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center hover:shadow-glow transition-shadow">
               <CardContent className="pt-8 pb-8">
@@ -244,9 +245,9 @@ const Home = () => {
                     <p className="text-muted-foreground line-clamp-2 mb-4">
                       {post.excerpt}
                     </p>
-                    <Link to={`/blog/${post.id}`}>
+                    <Link to={`/blog/${post.id}`} aria-label={`Read ${post.title}`}>
                       <Button variant="ghost" className="group/btn w-full">
-                        Read More
+                        Read {post.title}
                         <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
