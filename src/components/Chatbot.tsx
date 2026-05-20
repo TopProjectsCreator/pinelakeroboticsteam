@@ -28,13 +28,20 @@ const Chatbot = () => {
   }, [messages]);
 
   const streamChat = async (userMessages: Message[]) => {
-    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("Chat is not configured. Missing Supabase URL or publishable key.");
+    }
+
+    const CHAT_URL = `${supabaseUrl}/functions/v1/chat`;
     
     const resp = await fetch(CHAT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        Authorization: `Bearer ${supabaseKey}`,
       },
       body: JSON.stringify({ messages: userMessages }),
     });
@@ -137,9 +144,10 @@ const Chatbot = () => {
       await streamChat([...messages, userMsg]);
     } catch (error) {
       console.error("Chat error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
