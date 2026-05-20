@@ -245,9 +245,9 @@ const Home = () => {
                     <p className="text-muted-foreground line-clamp-2 mb-4">
                       {post.excerpt}
                     </p>
-                    <Link to={`/blog/${post.id}`}>
+                    <Link to={`/blog/${post.id}`} aria-label={`Read ${post.title}`}>
                       <Button variant="ghost" className="group/btn w-full">
-                        Read More
+                        Read {post.title}
                         <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
