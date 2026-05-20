@@ -124,6 +124,7 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-orbitron font-bold mb-12 text-center text-blue-900">Our Impact</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center hover:shadow-glow transition-shadow">
               <CardContent className="pt-8 pb-8">
