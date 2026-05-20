@@ -28,16 +28,31 @@ const Chatbot = () => {
   }, [messages]);
 
   const streamChat = async (userMessages: Message[]) => {
-    const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("Chat is not configured. Missing Supabase URL or publishable key.");
+    }
+
+    const CHAT_URL = `${supabaseUrl}/functions/v1/chat`;
     
-    const resp = await fetch(CHAT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
-      body: JSON.stringify({ messages: userMessages }),
-    });
+    let resp: Response;
+    try {
+      resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${supabaseKey}`,
+        },
+        body: JSON.stringify({ messages: userMessages }),
+      });
+    } catch (error) {
+      console.error("Chat request failed:", error);
+      throw new Error(
+        "Could not reach the chat service. Please check your internet connection and Supabase function deployment.",
+      );
+    }
 
     if (!resp.ok) {
       if (resp.status === 429) {
@@ -53,7 +68,16 @@ const Chatbot = () => {
           variant: "destructive",
         });
       }
-      throw new Error("Failed to start stream");
+      let backendMessage = "";
+      try {
+        const errPayload = await resp.json();
+        backendMessage = errPayload?.error ?? "";
+      } catch {
+        backendMessage = await resp.text();
+      }
+
+      const statusMessage = backendMessage || `HTTP ${resp.status}`;
+      throw new Error(`Chat service error: ${statusMessage}`);
     }
 
     if (!resp.body) throw new Error("No response body");
@@ -137,9 +161,10 @@ const Chatbot = () => {
       await streamChat([...messages, userMsg]);
     } catch (error) {
       console.error("Chat error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to send message. Please try again.";
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
