@@ -72,16 +72,16 @@ export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000, id }:
   return (
     <div>
       <div className="border border-input rounded-t-md bg-muted/50 p-1.5 flex flex-wrap gap-0.5 items-center">
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive("bold") ? "bg-accent" : ""} title="Bold">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleBold().run()} className={editor.isActive("bold") ? "bg-accent" : ""} title="Bold" aria-label="Bold">
           <Bold className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive("italic") ? "bg-accent" : ""} title="Italic">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleItalic().run()} className={editor.isActive("italic") ? "bg-accent" : ""} title="Italic" aria-label="Italic">
           <Italic className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleUnderline().run()} className={editor.isActive("underline") ? "bg-accent" : ""} title="Underline">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleUnderline().run()} className={editor.isActive("underline") ? "bg-accent" : ""} title="Underline" aria-label="Underline">
           <UnderlineIcon className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive("strike") ? "bg-accent" : ""} title="Strikethrough">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleStrike().run()} className={editor.isActive("strike") ? "bg-accent" : ""} title="Strikethrough" aria-label="Strikethrough">
           <Strikethrough className="h-4 w-4" />
         </Button>
 
@@ -89,7 +89,7 @@ export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000, id }:
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button type="button" variant="ghost" size="sm" title="Text Color">
+            <Button type="button" variant="ghost" size="sm" title="Text Color" aria-label="Text color">
               <Palette className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
@@ -99,6 +99,7 @@ export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000, id }:
                 <button
                   key={color}
                   type="button"
+                  aria-label={`Set text color ${color}`}
                   className="w-6 h-6 rounded border border-input hover:scale-110 transition-transform"
                   style={{ backgroundColor: color }}
                   onClick={() => editor.chain().focus().setColor(color).run()}
@@ -119,19 +120,19 @@ export const ContactRichTextEditor = ({ value, onChange, maxLength = 5000, id }:
 
         <Separator orientation="vertical" className="h-6" />
 
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleBulletList().run()} className={editor.isActive("bulletList") ? "bg-accent" : ""} title="Bullet List">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleBulletList().run()} className={editor.isActive("bulletList") ? "bg-accent" : ""} title="Bullet List" aria-label="Bullet list">
           <List className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={editor.isActive("orderedList") ? "bg-accent" : ""} title="Numbered List">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().toggleOrderedList().run()} className={editor.isActive("orderedList") ? "bg-accent" : ""} title="Numbered List" aria-label="Numbered list">
           <ListOrdered className="h-4 w-4" />
         </Button>
 
         <Separator orientation="vertical" className="h-6" />
 
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} title="Undo">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().undo().run()} disabled={!editor.can().undo()} title="Undo" aria-label="Undo">
           <Undo className="h-4 w-4" />
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} title="Redo">
+        <Button type="button" variant="ghost" size="sm" onClick={() => editor.chain().focus().redo().run()} disabled={!editor.can().redo()} title="Redo" aria-label="Redo">
           <Redo className="h-4 w-4" />
         </Button>
       </div>
