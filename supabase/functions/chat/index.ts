@@ -78,7 +78,14 @@ Current Stats:
    - Wins-Losses-Ties: 1-4-0
 === CURRENT SEASON ===
 
-Currently it is the offseason for the team, however they are getting ready for the 2026-2027 season BIOBUZZ by making the preseason robot and getting this site up to date.
+Currently it is the offseason for the team, however they are getting ready for the 2026-2027 season BIOBUZZ by making the preseason robot and getting this site up to date. Additionally, they are doing tryouts for next years team.
+
+=== USED PLATFORMS ===
+
+  - Use Google Chat for communication and Canva/Powerpoint for presentations.
+  - We used to use Slack for communications
+  - Github = Version Control; Android Studio = IDE; Java = Language; 
+  - No roadrunner or ftcdashboard (Two common ftc libraries) for the DECODE season. lets see what BioBuzz brings?
 
 === TEAM MEMBERS & ROLES ===
 Build Team (5 members):
