@@ -96,7 +96,7 @@ const Home = () => {
               <span className="text-primary font-semibold">Team 23442</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-orbitron font-bold mb-4 bg-gradient-primary bg-clip-text text-orange-600">
-              Wolverines — FTC Robotics Team 23442
+              Wolverines
             </h1>
             <p className="text-2xl md:text-3xl font-semibold mb-6 text-foreground">
               "All Claws on Deck!"
