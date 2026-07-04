@@ -175,11 +175,22 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const { name, email, message } = validationResult.data;
-    
-    // Sanitize inputs for HTML
+
+    // Sanitize plain-text fields for HTML interpolation
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
-    const safeMessage = escapeHtml(message);
+
+    // Message is rich-text HTML from Tiptap: sanitize (allowlist), don't escape.
+    const safeMessageHtml = sanitizeHtml(message);
+    const messageText = htmlToText(safeMessageHtml);
+
+    // Guard against effectively-empty rich-text (e.g. "<p></p>")
+    if (messageText.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "Message is required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
     console.log("Sending contact email from:", safeEmail);
 
@@ -205,11 +216,11 @@ const handler = async (req: Request): Promise<Response> => {
                 fields: [
                   {
                     type: "mrkdwn",
-                    text: `*Name:*\n${safeName}`
+                    text: `*Name:*\n${name}`
                   },
                   {
                     type: "mrkdwn",
-                    text: `*Email:*\n${safeEmail}`
+                    text: `*Email:*\n${email}`
                   }
                 ]
               },
@@ -217,7 +228,7 @@ const handler = async (req: Request): Promise<Response> => {
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: `*Message:*\n${safeMessage}`
+                  text: `*Message:*\n${messageText}`
                 }
               }
             ]
@@ -247,7 +258,7 @@ const handler = async (req: Request): Promise<Response> => {
         <p><strong>Name:</strong> ${safeName}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
         <p><strong>Message:</strong></p>
-        <p>${safeMessage.replace(/\n/g, '<br>')}</p>
+        <div>${safeMessageHtml}</div>
       `,
     });
 
@@ -262,13 +273,14 @@ const handler = async (req: Request): Promise<Response> => {
         <h1>Thank you for contacting us, ${safeName}!</h1>
         <p>We have received your message and will get back to you as soon as possible.</p>
         <p><strong>Your message:</strong></p>
-        <p>${safeMessage.replace(/\n/g, '<br>')}</p>
+        <div>${safeMessageHtml}</div>
         <br>
         <p>Best regards,<br>Pine Lake Robotics Team</p>
       `,
     });
 
     console.log("Confirmation email sent:", confirmEmail);
+
 
     return new Response(
       JSON.stringify({ success: true, teamEmail, confirmEmail }),
