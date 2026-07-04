@@ -29,7 +29,7 @@ const contactSchema = z.object({
     .max(5000, "Message must be less than 5000 characters"),
 });
 
-// HTML escape function to prevent injection
+// HTML escape function to prevent injection (for plain text fields)
 function escapeHtml(text: string): string {
   const map: Record<string, string> = {
     '&': '&amp;',
@@ -39,6 +39,75 @@ function escapeHtml(text: string): string {
     "'": '&#039;',
   };
   return text.replace(/[&<>"']/g, (char) => map[char]);
+}
+
+// Allowlist-based sanitizer for rich-text HTML from the Tiptap editor.
+// Strips scripts/styles/iframes and all event handlers/javascript: URLs,
+// keeps only safe formatting tags and a restricted set of attributes.
+const ALLOWED_TAGS = new Set([
+  'p', 'br', 'strong', 'b', 'em', 'i', 'u', 's', 'strike', 'del',
+  'ul', 'ol', 'li', 'span', 'a', 'blockquote', 'code', 'pre',
+  'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+]);
+const ALLOWED_ATTRS: Record<string, Set<string>> = {
+  a: new Set(['href', 'title', 'target', 'rel']),
+  span: new Set(['style']),
+};
+const SAFE_STYLE_RE = /^\s*color\s*:\s*(#[0-9a-fA-F]{3,8}|rgb\([^)]+\)|[a-zA-Z]+)\s*;?\s*$/;
+
+function sanitizeHtml(dirty: string): string {
+  // Remove dangerous blocks entirely
+  let out = dirty.replace(/<(script|style|iframe|object|embed|link|meta)[\s\S]*?<\/\1>/gi, '');
+  out = out.replace(/<(script|style|iframe|object|embed|link|meta)[^>]*\/?>(?!)/gi, '');
+
+  // Walk tags
+  out = out.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g, (_m, tag: string, attrs: string) => {
+    const name = tag.toLowerCase();
+    if (!ALLOWED_TAGS.has(name)) return '';
+    const isClose = _m.startsWith('</');
+    if (isClose) return `</${name}>`;
+
+    const allowed = ALLOWED_ATTRS[name];
+    let safeAttrs = '';
+    if (allowed) {
+      const attrRe = /([a-zA-Z_:][a-zA-Z0-9_.:-]*)\s*=\s*"([^"]*)"|([a-zA-Z_:][a-zA-Z0-9_.:-]*)\s*=\s*'([^']*)'/g;
+      let m: RegExpExecArray | null;
+      while ((m = attrRe.exec(attrs)) !== null) {
+        const attr = (m[1] || m[3]).toLowerCase();
+        const val = (m[2] ?? m[4] ?? '').trim();
+        if (!allowed.has(attr)) continue;
+        if (/^on/i.test(attr)) continue;
+        if (attr === 'href') {
+          if (!/^(https?:|mailto:|#|\/)/i.test(val)) continue;
+        }
+        if (attr === 'style') {
+          if (!SAFE_STYLE_RE.test(val)) continue;
+        }
+        safeAttrs += ` ${attr}="${val.replace(/"/g, '&quot;')}"`;
+      }
+      // Force safe rel/target on links
+      if (name === 'a') safeAttrs += ' rel="noopener noreferrer" target="_blank"';
+    }
+    return `<${name}${safeAttrs}>`;
+  });
+
+  return out;
+}
+
+// Strip HTML tags to extract plain text (for empty check + Slack)
+function htmlToText(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|li|h[1-6])>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
 }
 
 // Rate limiting function
