@@ -20,7 +20,8 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openrouter/free",
+        model: "tencent/hy3:free",
+        models: ["tencent/hy3:free", "google/gemma-4-31b-it:free", "openrouter/free"],
         messages: [
           {
             role: "system",
