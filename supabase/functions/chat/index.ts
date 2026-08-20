@@ -338,35 +338,82 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - Encourage visitors to check the website, blog, or contact the team for more info
 - Keep responses conversational and friendly
 - If asked to generate images, you can create relevant robotics or team-themed images`,
-          },
-          ...messages,
-        ],
-        stream: true,
-      }),
-    });
+      },
+      ...messages,
+    ];
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limits exceeded, please try again later." }), {
-          status: 429,
+    let response: Response | null = null;
+
+    // 1) OpenRouter: gemma primary, openrouter/free fallback
+    if (OPENROUTER_API_KEY) {
+      try {
+        const orResp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "google/gemma-4-31b-it:free",
+            models: ["google/gemma-4-31b-it:free", "openrouter/free"],
+            messages: chatMessages,
+            stream: true,
+          }),
+        });
+        if (orResp.ok) {
+          response = orResp;
+        } else {
+          console.error("OpenRouter error:", orResp.status, await orResp.text());
+        }
+      } catch (err) {
+        console.error("OpenRouter request failed:", err);
+      }
+    }
+
+    // 2) Final fallback: Lovable AI Gateway (gpt-5.6-luna)
+    if (!response) {
+      if (!LOVABLE_API_KEY) {
+        return new Response(JSON.stringify({ error: "No AI provider is configured." }), {
+          status: 500,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "Payment required, please add funds to your Lovable AI workspace." }),
-          {
-            status: 402,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          },
-        );
-      }
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "AI gateway error" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+
+      const lovableResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Lovable-API-Key": LOVABLE_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-5.6-luna",
+          reasoning_effort: "none",
+          messages: chatMessages,
+          stream: true,
+        }),
       });
+
+      if (!lovableResp.ok) {
+        if (lovableResp.status === 429) {
+          return new Response(JSON.stringify({ error: "Rate limits exceeded, please try again later." }), {
+            status: 429,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        if (lovableResp.status === 402) {
+          return new Response(
+            JSON.stringify({ error: "Payment required, please add credits to your Lovable AI workspace." }),
+            { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+          );
+        }
+        console.error("Lovable AI gateway error:", lovableResp.status, await lovableResp.text());
+        return new Response(JSON.stringify({ error: "AI gateway error" }), {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      response = lovableResp;
     }
 
     return new Response(response.body, {
