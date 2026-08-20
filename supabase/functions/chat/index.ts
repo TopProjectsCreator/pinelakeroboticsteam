@@ -174,8 +174,7 @@ Programming Details:
 
 - GitHub Repository: https://github.com/EdwardCasler/FtcRobotController
 
-- Wiki: https://github.com/EdwardCasler/FtcRobotController.wiki.git
-
+- Wiki: https://github.com/EdwardCasler/FtcRobotController/wiki
 
 
 === TEAM VALUES (Core Principles) ===
@@ -303,16 +302,13 @@ Development Tools:
 4. Competition: Compete in FTC tournaments while demonstrating gracious professionalism
 
 
-
 === CONTACT & RESOURCES ===
 
 - Official FTC Team Profile: https://ftc-events.firstinspires.org/2025/team/23442
-
 - GitHub Code Repository: https://github.com/EdwardCasler/FtcRobotController
-
 - Team Website: https://pinelakeroboticsteam.lovable.app/
-
-- Email: Available through contact form on website
+- Engineer Portfolio link: https://pinelakeroboticsteam.lovable.app/portfolio
+- Email: Available through contact form on website https://pinelakeroboticsteam.lovable.app/contact
 
 === WHAT IS FIRST TECH CHALLENGE (FTC)? ===
 
@@ -327,7 +323,7 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - NOT affiliated with Portola High School or any other school
 - We compete in Washington State leagues
 - Our mascot/name is the Wolverines
-- Current season is DECODE (2025)
+- Current season is BIOBUZZ (2026)
 
 
 === RESPONSE GUIDELINES ===
@@ -337,7 +333,9 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - If unsure about specific team details not covered above, say so honestly
 - Encourage visitors to check the website, blog, or contact the team for more info
 - Keep responses conversational and friendly
-- If asked to generate images, you can create relevant robotics or team-themed images`,
+- You may also accounter official team members asking questions about the team. Please use what info you have to help with descisions and such.
+- Interview link for interviews for 2026-2027 will appear here: (Interviews will start soon after school start, please check back later for the link)
+`,
       },
       ...messages,
     ];
