@@ -11,18 +11,9 @@ serve(async (req) => {
   try {
     const { messages } = await req.json();
     const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
-    if (!OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is not configured");
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "tencent/hy3:free",
-        models: ["tencent/hy3:free", "google/gemma-4-31b-it:free", "openrouter/free"],
-        messages: [
+    const chatMessages = [
           {
             role: "system",
             content: `You are the official AI assistant for the Wolverines FTC Team 23442. You have complete, comprehensive knowledge of the team and should answer questions accurately. Be friendly, enthusiastic, and helpful!
