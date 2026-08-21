@@ -378,7 +378,7 @@ const Applications = () => {
                       if (f) handleFile(f);
                     }}
                   />
-                  <Button variant="ghost" onClick={() => answer("Skipped the upload")}>
+                  <Button variant="ghost" onClick={() => answer("Skipped the upload", { raw: null })}>
                     Skip
                   </Button>
                 </div>
