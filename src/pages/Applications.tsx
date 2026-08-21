@@ -22,7 +22,17 @@ interface Question {
 interface Turn {
   question: string;
   answer: string;
+  /** Exactly what the applicant did, unformatted */
+  type?: Question["type"];
+  raw?: string | string[] | Record<string, string> | null;
+  /** Choices they were shown, when applicable */
+  options?: string[];
+  items?: string[];
+  categories?: string[];
+  file?: { name: string; size: number; contentType: string; path?: string } | null;
+  answered_at?: string;
 }
+
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/application-interview`;
 const GRADES = ["6th", "7th", "8th"];
