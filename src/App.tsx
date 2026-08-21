@@ -13,6 +13,7 @@ import AddBlogPost from "./pages/AddBlogPost";
 import Wiki from "./pages/Wiki";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
+import Applications from "./pages/Applications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
