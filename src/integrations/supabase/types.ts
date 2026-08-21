@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          ai_concerns: string | null
+          ai_recommendation: string | null
+          ai_score: number | null
+          ai_strengths: string | null
+          ai_summary: string | null
+          attachments: Json
+          commit_10_hours: string | null
+          created_at: string
+          email: string
+          grade: string
+          id: string
+          name: string
+          parent_volunteer: string | null
+          robotics_experience: string | null
+          status: string
+          transcript: Json
+          updated_at: string
+        }
+        Insert: {
+          ai_concerns?: string | null
+          ai_recommendation?: string | null
+          ai_score?: number | null
+          ai_strengths?: string | null
+          ai_summary?: string | null
+          attachments?: Json
+          commit_10_hours?: string | null
+          created_at?: string
+          email: string
+          grade: string
+          id?: string
+          name: string
+          parent_volunteer?: string | null
+          robotics_experience?: string | null
+          status?: string
+          transcript?: Json
+          updated_at?: string
+        }
+        Update: {
+          ai_concerns?: string | null
+          ai_recommendation?: string | null
+          ai_score?: number | null
+          ai_strengths?: string | null
+          ai_summary?: string | null
+          attachments?: Json
+          commit_10_hours?: string | null
+          created_at?: string
+          email?: string
+          grade?: string
+          id?: string
+          name?: string
+          parent_volunteer?: string | null
+          robotics_experience?: string | null
+          status?: string
+          transcript?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           category: string
