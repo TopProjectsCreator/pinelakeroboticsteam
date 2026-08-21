@@ -347,8 +347,10 @@ const Applications = () => {
                     onClick={() =>
                       answer(
                         (question.items ?? []).map((i) => `${i} → ${buckets[i]}`).join("; "),
+                        { raw: { ...buckets } },
                       )
                     }
+
                   >
                     Continue
                   </Button>
