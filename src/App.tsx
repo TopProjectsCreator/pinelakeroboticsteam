@@ -13,6 +13,7 @@ import AddBlogPost from "./pages/AddBlogPost";
 import Wiki from "./pages/Wiki";
 import Portfolio from "./pages/Portfolio";
 import Contact from "./pages/Contact";
+import Applications from "./pages/Applications";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/wiki/:page" element={<Wiki />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/applications" element={<Applications />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
