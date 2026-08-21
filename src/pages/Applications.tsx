@@ -319,7 +319,7 @@ const Applications = () => {
                       <span className="text-sm">{o}</span>
                     </label>
                   ))}
-                  <Button disabled={multi.length === 0} onClick={() => answer(multi.join(", "))}>
+                  <Button disabled={multi.length === 0} onClick={() => answer(multi.join(", "), { raw: multi })}>
                     Continue
                   </Button>
                 </div>
