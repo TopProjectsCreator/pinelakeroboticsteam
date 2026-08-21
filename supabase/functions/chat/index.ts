@@ -28,7 +28,7 @@ Team Name: Wolverines
 
 Team Motto: "All Claws on Deck!"
 
-Founded: 2023 (Rookie Year)
+Founded: 2023 (Rookie Year). We actually had a team before that as #7977 (https://theorangealliance.org/teams/7977) with a rookie year of 2013, but our last active season as that team and team # was 2019/20 - SKYSTONE.
 
 Location: Sammamish, Washington
 
@@ -117,7 +117,6 @@ Current Stats:
    - Team won the Judges Choice award
 
    - Engineering portfolio at https://pinelakeroboticsteam.lovable.app/portfolio
-
    - Wins-Losses-Ties: 1-4-0
 
 === CURRENT SEASON ===
@@ -129,51 +128,36 @@ Currently it is the offseason for the team, however they are getting ready for t
 Goals for preseason bot:
 
  * Studica listed 6 items that the robot needs to do. 5 of them are still covered up, and one is to intake pollen
-
  * The team believes that autonomous is very important this season and will work on the limelight (that they just bought) to make them #1 this season
-
-  * Additionally, tryouts for next years team is open, and if a meeting on june 9th is there for this purpose.
-
+  * Additionally, Tryouts are open! The link will appear below
 
 
+=== TEAM MEMBERS & ROLES === 
 
-
-=== TEAM MEMBERS & ROLES ===
+For the 2025-2026 DECODE season:
 
 Build Team (5 members):
 
-- Maksim - Works on robot construction and mechanical systems
-
-- Janya - Contributes to design and building
-
-- Arya - Helps with prototyping and assembly
-
-- Aditya - Assists with mechanical work
-
-- Shriyash - Part of the build crew
-
-
+- Maksim - Part of the build crew, knows how to CAD
+- Janya - Part of the build crew
+- Arya - Part of the build crew
+- Aditya - Part of the build crew
+- Shriyash - Part of the build crew, knows how to CAD
 
 Code Team (4 members):
 
-- Sim - Programming and software development
-
-- Abhi - Coding autonomous and teleop modes
-
-- Ishaan - Software development
-
-- Edward - Lead programmer, manages GitHub repository
+- Sim - Officially part of the team, but never attended any of the meetings and isnt considered a team member
+- Abhi - Officially a coder but does build instead
+- Ishaan - Lead programmer, manages GitHub repository
+- Edward - Software development
 
 
 
 Programming Details:
 
 - Language: Java
-
 - Framework: FTC SDK (FIRST Tech Challenge Software Development Kit)
-
 - GitHub Repository: https://github.com/EdwardCasler/FtcRobotController
-
 - Wiki: https://github.com/EdwardCasler/FtcRobotController/wiki
 
 
@@ -319,11 +303,11 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - End game challenges
 
 === IMPORTANT REMINDERS ===
-- We are from Pine Lake Middle School (PLMS) in Sammamish, WA
+- We are from Pine Lake Middle School (PLMS) in Sammamish, WA, United States
 - NOT affiliated with Portola High School or any other school
 - We compete in Washington State leagues
 - Our mascot/name is the Wolverines
-- Current season is BIOBUZZ (2026)
+- Current season is BIOBUZZ (2026 - 2027)
 
 
 === RESPONSE GUIDELINES ===
