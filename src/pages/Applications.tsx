@@ -125,13 +125,27 @@ const Applications = () => {
     await loadNext([]);
   };
 
-  const answer = (value: string) => {
+  const answer = (value: string, meta: Partial<Turn> = {}) => {
     if (!question) return;
-    const next = [...transcript, { question: question.prompt, answer: value }];
+    const next: Turn[] = [
+      ...transcript,
+      {
+        question: question.prompt,
+        answer: value,
+        type: question.type,
+        raw: meta.raw ?? value,
+        ...(question.options ? { options: question.options } : {}),
+        ...(question.items ? { items: question.items } : {}),
+        ...(question.categories ? { categories: question.categories } : {}),
+        ...(meta.file ? { file: meta.file } : {}),
+        answered_at: new Date().toISOString(),
+      },
+    ];
     setTranscript(next);
     setQuestion(null);
     loadNext(next);
   };
+
 
   const handleFile = async (file: File) => {
     setLoading(true);
