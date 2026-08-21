@@ -161,7 +161,11 @@ const Applications = () => {
         dataBase64: btoa(binary),
       });
       setAttachments((prev) => [...prev, data.path]);
-      answer(`Uploaded file: ${file.name}`);
+      answer(`Uploaded file: ${file.name}`, {
+        raw: data.path,
+        file: { name: file.name, size: file.size, contentType: file.type, path: data.path },
+      });
+
     } catch (e) {
       toast({
         title: "Upload failed",
