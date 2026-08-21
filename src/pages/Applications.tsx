@@ -22,7 +22,17 @@ interface Question {
 interface Turn {
   question: string;
   answer: string;
+  /** Exactly what the applicant did, unformatted */
+  type?: Question["type"];
+  raw?: string | string[] | Record<string, string> | null;
+  /** Choices they were shown, when applicable */
+  options?: string[];
+  items?: string[];
+  categories?: string[];
+  file?: { name: string; size: number; contentType: string; path?: string } | null;
+  answered_at?: string;
 }
+
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/application-interview`;
 const GRADES = ["6th", "7th", "8th"];
@@ -115,13 +125,27 @@ const Applications = () => {
     await loadNext([]);
   };
 
-  const answer = (value: string) => {
+  const answer = (value: string, meta: Partial<Turn> = {}) => {
     if (!question) return;
-    const next = [...transcript, { question: question.prompt, answer: value }];
+    const next: Turn[] = [
+      ...transcript,
+      {
+        question: question.prompt,
+        answer: value,
+        type: question.type,
+        raw: meta.raw ?? value,
+        ...(question.options ? { options: question.options } : {}),
+        ...(question.items ? { items: question.items } : {}),
+        ...(question.categories ? { categories: question.categories } : {}),
+        ...(meta.file ? { file: meta.file } : {}),
+        answered_at: new Date().toISOString(),
+      },
+    ];
     setTranscript(next);
     setQuestion(null);
     loadNext(next);
   };
+
 
   const handleFile = async (file: File) => {
     setLoading(true);
@@ -137,7 +161,11 @@ const Applications = () => {
         dataBase64: btoa(binary),
       });
       setAttachments((prev) => [...prev, data.path]);
-      answer(`Uploaded file: ${file.name}`);
+      answer(`Uploaded file: ${file.name}`, {
+        raw: data.path,
+        file: { name: file.name, size: file.size, contentType: file.type, path: data.path },
+      });
+
     } catch (e) {
       toast({
         title: "Upload failed",
@@ -295,7 +323,7 @@ const Applications = () => {
                       <span className="text-sm">{o}</span>
                     </label>
                   ))}
-                  <Button disabled={multi.length === 0} onClick={() => answer(multi.join(", "))}>
+                  <Button disabled={multi.length === 0} onClick={() => answer(multi.join(", "), { raw: multi })}>
                     Continue
                   </Button>
                 </div>
@@ -323,8 +351,10 @@ const Applications = () => {
                     onClick={() =>
                       answer(
                         (question.items ?? []).map((i) => `${i} → ${buckets[i]}`).join("; "),
+                        { raw: { ...buckets } },
                       )
                     }
+
                   >
                     Continue
                   </Button>
@@ -348,7 +378,7 @@ const Applications = () => {
                       if (f) handleFile(f);
                     }}
                   />
-                  <Button variant="ghost" onClick={() => answer("Skipped the upload")}>
+                  <Button variant="ghost" onClick={() => answer("Skipped the upload", { raw: null })}>
                     Skip
                   </Button>
                 </div>
