@@ -236,7 +236,7 @@ const Applications = () => {
                 type="email"
                 value={applicant.email}
                 onChange={(e) => setApplicant({ ...applicant, email: e.target.value })}
-                placeholder="you@example.com"
+                placeholder="user@issaquah.wednet.edu"
                 required
               />
             </div>
