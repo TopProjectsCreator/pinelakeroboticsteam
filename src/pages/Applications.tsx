@@ -194,7 +194,7 @@ const Applications = () => {
       <header className="mb-10 text-center">
         <h1 className="font-orbitron text-4xl font-bold mb-3">Join the Wolverines</h1>
         <p className="text-muted-foreground">
-          Apply to FTC Team 23442 at Pine Lake Middle School. Answer a few quick questions, then chat with our AI
+          Apply to FTC Team 23442 at Pine Lake Middle School.
           interviewer.
         </p>
       </header>
