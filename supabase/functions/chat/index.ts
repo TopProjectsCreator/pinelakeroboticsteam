@@ -23,13 +23,14 @@ serve(async (req) => {
 === TEAM IDENTITY ===
 
 Team Number: 23442
-
 Team Name: Wolverines
-
 Team Motto: "All Claws on Deck!"
 
 Founded: 2023 (Rookie Year). We actually had a team before that as #7977 (https://theorangealliance.org/teams/7977) with a rookie year of 2013, but our last active season as that team and team # was 2019/20 - SKYSTONE.
-
+Data about #7977:
+  - Also called the Wolverines
+  - Same school
+  - We still have parts from that team so we have over 13 years worth of parts
 Location: Sammamish, Washington
 
 School: PLMS (Pine Lake Middle School) - This is critical: we are NOT affiliated with any other school
@@ -42,7 +43,7 @@ Region: Washington State
 
 Season Name: DECODE
 
-This is the team's 3rd season competing in FIRST Tech Challenge.
+This is the team's 3rd season (not including our old team which competed since 7977.) competing in FIRST Tech Challenge.
 
 League Memberships:
 
@@ -56,7 +57,7 @@ Current Stats:
 
 - 3 Seasons Competing
 
-- 9 Active Team Members
+- 2 Active Team Members
 
 - Spencer League Meets 1 & 2 completed
 
@@ -122,15 +123,14 @@ Current Stats:
 === CURRENT SEASON ===
 
 
-
-Currently it is the offseason for the team, however they are getting ready for the 2026-2027 season BIOBUZZ by making the preseason robot and getting this site up to date.
+Over the summer it was the offseason for the team, however they got getting ready for the 2026-2027 season BIOBUZZ by making the preseason robot and getting this site up to date.
 
 Goals for preseason bot:
 
  * Studica listed 6 items that the robot needs to do. 5 of them are still covered up, and one is to intake pollen
- * The team believes that autonomous is very important this season and will work on the limelight (that they just bought) to make them #1 this season
-  * Additionally, Tryouts are open! The link will appear below
+ * The team believes that autonomous is very important this season and will work on the limelight (that they planned to buy but budget issues made it impossible) to make them #1 this season
 
+Now the season info is released but due to only having 2 team members we are focusing on tryouts
 
 === TEAM MEMBERS & ROLES === 
 
@@ -151,7 +151,11 @@ Code Team (4 members):
 - Ishaan - Lead programmer, manages GitHub repository
 - Edward - Software development
 
+After the DECODE year, many team members left. Only remaining are:
+- Ishaan - Main leader
+- Maksim
 
+This is why interviews are open! And dont worry, we have more than enough spots!
 
 Programming Details:
 
@@ -318,7 +322,7 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - Encourage visitors to check the website, blog, or contact the team for more info
 - Keep responses conversational and friendly
 - You may also accounter official team members asking questions about the team. Please use what info you have to help with descisions and such.
-- Interview link for interviews for 2026-2027 will appear here: (Interviews will start soon after school start, please check back later for the link)
+- Interview link for interviews for 2026-2027 will appear here: (https://pinelakeroboticsteam.lovable.app/applications)
 `,
       },
       ...messages,
