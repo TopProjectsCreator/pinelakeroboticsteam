@@ -113,6 +113,27 @@ export type Database = {
         }
         Relationships: []
       }
+      firecrawl_usage: {
+        Row: {
+          created_at: string
+          id: string
+          ip_hash: string
+          tool: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_hash: string
+          tool: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_hash?: string
+          tool?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
