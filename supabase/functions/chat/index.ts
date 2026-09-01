@@ -323,6 +323,12 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - Current season is BIOBUZZ (2026 - 2027)
 
 
+=== WEB TOOLS ===
+You have live web tools (web_search, web_scrape, web_map, web_crawl, web_extract) powered by Firecrawl.
+They cost money, so use them ONLY when the answer is not in the knowledge above and the user needs
+current or external information. Never use more than ${MAX_TOOL_CALLS_PER_MESSAGE} tool calls per message,
+prefer web_search or a single web_scrape, and cite the URLs you used.
+
 === RESPONSE GUIDELINES ===
 - Be enthusiastic and supportive of the team
 - Provide accurate information based on the knowledge above
@@ -337,7 +343,78 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
       ...messages,
     ];
 
+    // ---- Tool phase (non-streaming): let the model call Firecrawl tools first ----
+    const ipHash = await hashIp(getClientIp(req));
+    const toolsAvailable = !!Deno.env.get("FIRECRAWL_API_KEY") && !(await checkRateLimit(ipHash));
+
+    async function toolCompletion(withTools: boolean) {
+      if (OPENROUTER_API_KEY) {
+        try {
+          const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              model: "google/gemma-4-31b-it:free",
+              models: ["google/gemma-4-31b-it:free", "openrouter/free"],
+              messages: chatMessages,
+              ...(withTools ? { tools: firecrawlTools, tool_choice: "auto" } : {}),
+            }),
+          });
+          if (r.ok) return await r.json();
+          console.error("OpenRouter tool phase error:", r.status, await r.text());
+        } catch (err) {
+          console.error("OpenRouter tool phase failed:", err);
+        }
+      }
+      if (!LOVABLE_API_KEY) return null;
+      const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: { "Lovable-API-Key": LOVABLE_API_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "openai/gpt-5.6-luna",
+          reasoning_effort: "none",
+          messages: chatMessages,
+          ...(withTools ? { tools: firecrawlTools, tool_choice: "auto" } : {}),
+        }),
+      });
+      if (!r.ok) {
+        console.error("Lovable tool phase error:", r.status, await r.text());
+        return null;
+      }
+      return await r.json();
+    }
+
+    if (toolsAvailable) {
+      let used = 0;
+      for (let round = 0; round < MAX_TOOL_CALLS_PER_MESSAGE && used < MAX_TOOL_CALLS_PER_MESSAGE; round++) {
+        const data = await toolCompletion(true);
+        const msg = data?.choices?.[0]?.message;
+        const calls = msg?.tool_calls;
+        if (!msg || !Array.isArray(calls) || calls.length === 0) break;
+
+        chatMessages.push({ role: "assistant", content: msg.content ?? "", tool_calls: calls } as never);
+
+        for (const call of calls.slice(0, MAX_TOOL_CALLS_PER_MESSAGE - used)) {
+          used++;
+          let args: Record<string, unknown> = {};
+          try {
+            args = JSON.parse(call.function?.arguments ?? "{}");
+          } catch { /* ignore malformed args */ }
+          const result = await runFirecrawlTool(call.function?.name ?? "", args, ipHash);
+          chatMessages.push({
+            role: "tool",
+            tool_call_id: call.id,
+            content: result,
+          } as never);
+        }
+      }
+    }
+
     let response: Response | null = null;
+
 
     // 1) OpenRouter: gemma primary, openrouter/free fallback
     if (OPENROUTER_API_KEY) {
