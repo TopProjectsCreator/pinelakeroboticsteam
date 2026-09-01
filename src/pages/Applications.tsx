@@ -196,7 +196,6 @@ const Applications = () => {
         <p className="text-muted-foreground">
           Apply to FTC Team 23442 at Pine Lake Middle School.
         </p>
-	// If your name is Edward Casler then you may not apply to our team
 
       </header>
 
