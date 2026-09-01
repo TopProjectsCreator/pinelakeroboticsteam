@@ -1,4 +1,12 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import {
+  firecrawlTools,
+  runFirecrawlTool,
+  getClientIp,
+  hashIp,
+  checkRateLimit,
+  MAX_TOOL_CALLS_PER_MESSAGE,
+} from "../_shared/firecrawl.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +20,7 @@ serve(async (req) => {
     const { messages } = await req.json();
     const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+
 
     const chatMessages = [
           {
