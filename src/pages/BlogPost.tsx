@@ -41,52 +41,8 @@ const BlogPost = () => {
     },
     enabled: !!id
   });
-  const uploadedRef = useRef(false);
   const contentRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const ensureImages = async () => {
-      if (!post) return;
-      try {
-        const storageBase = 'https://cymvcskrchgjkmdwmexu.supabase.co/storage/v1/object/public/blog-images';
-        const files = [{
-          name: 'first-game-image-1.jpg',
-          src: img1,
-          type: 'image/jpeg'
-        }, {
-          name: 'first-game-image-2.jpg',
-          src: img2,
-          type: 'image/jpeg'
-        }, {
-          name: 'first-game-image-3.jpg',
-          src: img3,
-          type: 'image/jpeg'
-        }];
-        // Always upsert all predefined images to guarantee availability
-        for (const f of files) {
-          try {
-            const res = await fetch(f.src);
-            if (!res.ok) continue;
-            const blob = await res.blob();
-            const {
-              error
-            } = await supabase.storage.from('blog-images').upload(f.name, blob, {
-              contentType: f.type,
-              upsert: true
-            });
-            if (error) console.error('Storage upload error', f.name, error.message);
-          } catch (err) {
-            console.error('Storage upload exception', f.name, err);
-          }
-        }
-      } catch (e) {
-        console.error('Auto-upload blog images error', e);
-      }
-    };
-    if (post && !uploadedRef.current) {
-      uploadedRef.current = true;
-      ensureImages();
-    }
-  }, [post]);
+
 
   // Enhance images inside the rendered HTML: lazy-load and fallback to local assets if remote fails
   useEffect(() => {
