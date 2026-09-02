@@ -128,9 +128,6 @@ const AddBlogPost = () => {
     setUploadProgress(0);
     
     try {
-      const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
       // Progress simulation for better UX
       const fileSize = file.size;
       const estimatedTime = Math.max(1000, Math.min(fileSize / 10000, 10000)); // 1-10 seconds based on file size
@@ -142,19 +139,24 @@ const AddBlogPost = () => {
         });
       }, estimatedTime / 9);
 
-      const { error: uploadError, data } = await supabase.storage
-        .from('blog-images')
-        .upload(filePath, file);
+      // Uploads go through a server-side function (storage writes are not public)
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const { data: uploadData, error: uploadError } = await supabase.functions.invoke(
+        'upload-blog-media',
+        { body: formData }
+      );
 
       clearInterval(progressInterval);
       
       if (uploadError) throw uploadError;
+      if (!uploadData?.publicUrl) throw new Error('Upload failed');
       
       setUploadProgress(100);
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('blog-images')
-        .getPublicUrl(filePath);
+      const publicUrl: string = uploadData.publicUrl;
+
 
       // Generate appropriate markdown/HTML based on file type
       let insertText = '';
