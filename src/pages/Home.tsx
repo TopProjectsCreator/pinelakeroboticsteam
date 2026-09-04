@@ -311,11 +311,18 @@ const Home = () => {
           <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
             Interested in robotics? Want to support our team? Have questions about FTC?
           </p>
-          <Link to="/contact">
-            <Button size="lg" variant="secondary">
-              Contact Us
-            </Button>
-          </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/contact">
+              <Button size="lg" variant="secondary">
+                Contact Us
+              </Button>
+            </Link>
+            <Link to="/applications">
+              <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                Apply to Join
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>;
