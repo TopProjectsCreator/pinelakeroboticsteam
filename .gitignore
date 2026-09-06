@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Deno (Edge Functions toolchain runs outside the repo; lockfile regenerates)
+deno.lock
+
 # Editor directories and files
 .vscode/*
 .agents/
