@@ -29,16 +29,51 @@ import Link from "@tiptap/extension-link";
 import TurndownService from "turndown";
 import { gfm as turndownGfm } from "turndown-plugin-gfm";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 import { RichTextToolbar } from "@/components/RichTextToolbar";
 
 const blogPostSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be less than 200 characters"),
-  slug: z.string().min(1, "Slug is required").max(200, "Slug must be less than 200 characters"),
+  slug: z.string().min(1, "Slug is required").max(200, "Slug must be less than 200 characters").regex(/^[a-z0-9-]+$/, "Slug can only contain lowercase letters, numbers, and hyphens"),
   excerpt: z.string().min(1, "Excerpt is required").max(500, "Excerpt must be less than 500 characters"),
-  content: z.string().min(1, "Content is required"),
-  category: z.string().min(1, "Category is required"),
-  read_time: z.string().min(1, "Read time is required"),
+  content: z.string().min(1, "Content is required").max(100000, "Content must be less than 100000 characters"),
+  category: z.string().min(1, "Category is required").max(100, "Category must be less than 100 characters"),
+  read_time: z.string().min(1, "Read time is required").max(50, "Read time must be less than 50 characters"),
 });
+
+// Validate that an upload URL is a safe http(s) URL with no attribute-breakout chars.
+const isSafePublicUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
+    if (/["<>\s]/.test(url)) return false;
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+// Escape a value interpolated into an HTML attribute (src="...", type="...").
+const escapeHtmlAttr = (value: string): string => {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+};
+
+// Escape label text interpolated into markdown ![label](url) / [label](url).
+const escapeMarkdownLabel = (value: string): string => {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/\[/g, "\\[")
+    .replace(/\]/g, "\\]")
+    .replace(/\r?\n/g, " ");
+};
+
+const isSafeMimeType = (mime: string): boolean => {
+  return /^[a-z0-9.+-]+\/[a-z0-9.+-]+$/i.test(mime);
+};
 
 type BlogPostFormData = z.infer<typeof blogPostSchema>;
 
@@ -49,6 +84,8 @@ const AddBlogPost = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [editorMode, setEditorMode] = useState<"markdown" | "visual">("markdown");
   const contentTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const submitInFlightRef = useRef(false);
+  const uploadInFlightRef = useRef(false);
   
   const turndownService = new TurndownService({
     headingStyle: "atx",
@@ -74,12 +111,14 @@ const AddBlogPost = () => {
       StarterKit,
       Image.configure({
         inline: true,
-        allowBase64: true,
+        allowBase64: false,
       }),
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
           class: "text-primary underline",
+          rel: "noopener noreferrer",
+          target: "_blank",
         },
       }),
     ],
@@ -107,6 +146,8 @@ const AddBlogPost = () => {
   };
 
   const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Guard rapid successive file-input changes while an upload is in flight.
+    if (uploadInFlightRef.current || isUploading) return;
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -125,6 +166,7 @@ const AddBlogPost = () => {
     }
 
     setIsUploading(true);
+    uploadInFlightRef.current = true;
     setUploadProgress(0);
     
     try {
@@ -157,11 +199,19 @@ const AddBlogPost = () => {
 
       const publicUrl: string = uploadData.publicUrl;
 
+      // Validate the server-returned URL before interpolating into HTML/markdown.
+      if (!isSafePublicUrl(publicUrl)) {
+        throw new Error('Upload returned an unsafe URL');
+      }
+      const safeUrlAttr = escapeHtmlAttr(publicUrl);
+      const safeUrlMarkdown = publicUrl.replace(/\(/g, "%28").replace(/\)/g, "%29");
+      const safeFileLabel = escapeMarkdownLabel(file.name);
+      const safeMimeAttr = isSafeMimeType(fileType) ? escapeHtmlAttr(fileType) : "";
 
       // Generate appropriate markdown/HTML based on file type
       let insertText = '';
       if (isImage) {
-        insertText = `![${file.name}](${publicUrl})`;
+        insertText = `![${safeFileLabel}](${safeUrlMarkdown})`;
         
         // For visual editor, insert image directly
         if (editorMode === "visual" && editor) {
@@ -170,11 +220,11 @@ const AddBlogPost = () => {
           return;
         }
       } else if (isVideo) {
-        insertText = `<video controls width="100%">\n  <source src="${publicUrl}" type="${fileType}">\n  Your browser does not support the video tag.\n</video>`;
+        insertText = `<video controls width="100%">\n  <source src="${safeUrlAttr}" type="${safeMimeAttr}">\n  Your browser does not support the video tag.\n</video>`;
       } else if (isAudio) {
-        insertText = `<audio controls>\n  <source src="${publicUrl}" type="${fileType}">\n  Your browser does not support the audio tag.\n</audio>`;
+        insertText = `<audio controls>\n  <source src="${safeUrlAttr}" type="${safeMimeAttr}">\n  Your browser does not support the audio tag.\n</audio>`;
       } else if (is3D) {
-        insertText = `[Download 3D Model: ${file.name}](${publicUrl})`;
+        insertText = `[Download 3D Model: ${safeFileLabel}](${safeUrlMarkdown})`;
       }
 
       if (editorMode === "visual" && editor) {
@@ -211,12 +261,20 @@ const AddBlogPost = () => {
       toast.error("Failed to upload file. Please try again.");
     } finally {
       setIsUploading(false);
+      uploadInFlightRef.current = false;
       setUploadProgress(0);
       event.target.value = '';
     }
   };
 
   const onSubmit = async (data: BlogPostFormData) => {
+    // Block submit-during-upload so embeds are not lost, and guard double-submit.
+    if (submitInFlightRef.current) return;
+    if (isUploading || uploadInFlightRef.current) {
+      toast.error("Please wait for the media upload to finish before submitting.");
+      return;
+    }
+    submitInFlightRef.current = true;
     setIsSubmitting(true);
     try {
       const { error } = await supabase.functions.invoke("create-blog-post", {
@@ -232,6 +290,7 @@ const AddBlogPost = () => {
       toast.error("Failed to create blog post. Please try again.");
     } finally {
       setIsSubmitting(false);
+      submitInFlightRef.current = false;
     }
   };
 
@@ -389,7 +448,10 @@ const AddBlogPost = () => {
                             placeholder="Write your blog post content here..." 
                             className="min-h-[400px]"
                             {...field}
-                            ref={contentTextareaRef}
+                            ref={(el) => {
+                              field.ref(el);
+                              contentTextareaRef.current = el;
+                            }}
                           />
                         ) : (
                           <div>
@@ -410,7 +472,7 @@ const AddBlogPost = () => {
                         {field.value ? (
                           <div>
                             <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
-                              {field.value}
+                              {DOMPurify.sanitize(marked.parse(field.value, { async: false }) as string)}
                             </ReactMarkdown>
                           </div>
                         ) : (
@@ -425,7 +487,7 @@ const AddBlogPost = () => {
             />
 
             <div className="flex gap-4">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting || isUploading}>
                 {isSubmitting ? "Creating..." : "Create Blog Post"}
               </Button>
               <Button 

@@ -16,7 +16,7 @@ import teamBuilding from "@/assets/team-building.jpg";
 import teamShopping from "@/assets/team-shopping.jpg";
 
 const Home = () => {
-  const { data: recentPosts = [], isLoading: postsLoading } = useQuery({
+  const { data: recentPosts = [], isLoading: postsLoading, isError: postsError, refetch: refetchPosts } = useQuery({
     queryKey: ["recent-blog-posts"],
     queryFn: async () => {
       const { data, error } = await supabase.
@@ -219,6 +219,13 @@ const Home = () => {
                   </CardContent>
                 </Card>
           )}
+            </div> :
+        postsError ?
+        <div className="text-center py-8">
+              <p className="text-muted-foreground mb-4">Failed to load blog posts. Please try again.</p>
+              <Button variant="outline" onClick={() => refetchPosts()}>
+                Try Again
+              </Button>
             </div> :
         recentPosts.length === 0 ?
         <div className="text-center py-8">

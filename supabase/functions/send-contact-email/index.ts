@@ -2,15 +2,30 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Rate limiting storage (in-memory for simplicity)
+// Rate limiting storage (best-effort in-memory per-isolate bucket: Edge
+// functions run on many isolates and this Map is NOT shared across them, so
+// limits are approximate under concurrency — good enough to slow abuse).
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+// Client IP for rate limiting: keyed on the LAST x-forwarded-for entry (the
+// closest proxy hop appended by the platform), not the spoofable first entry.
+function getClientIp(req: Request): string {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (!forwarded) return "unknown";
+  const last = forwarded.split(",").pop()?.trim();
+  return last ? last : "unknown";
+}
+
+// Escape Slack mrkdwn special chars so user input cannot inject formatting,
+// links, or channel/user pings into the notification.
+function escapeSlackMrkdwn(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
 // Contact form validation schema
 const contactSchema = z.object({
@@ -142,7 +157,7 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     // Get client IP for rate limiting
-    const clientIp = req.headers.get("x-forwarded-for") || "unknown";
+    const clientIp = getClientIp(req);
     
     // Check rate limit
     const rateLimitCheck = checkRateLimit(clientIp);
@@ -194,6 +209,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending contact email from:", safeEmail);
 
+    // Escape user input for Slack mrkdwn (name/email are plain text, message
+    // is plain text extracted from sanitized HTML).
+    const slackName = escapeSlackMrkdwn(name);
+    const slackEmail = escapeSlackMrkdwn(email);
+    const slackMessage = escapeSlackMrkdwn(messageText);
+
     // Send Slack notification
     const slackWebhookUrl = Deno.env.get("SLACK_WEBHOOK_URL");
     if (slackWebhookUrl) {
@@ -216,11 +237,11 @@ const handler = async (req: Request): Promise<Response> => {
                 fields: [
                   {
                     type: "mrkdwn",
-                    text: `*Name:*\n${name}`
+                    text: `*Name:*\n${slackName}`
                   },
                   {
                     type: "mrkdwn",
-                    text: `*Email:*\n${email}`
+                    text: `*Email:*\n${slackEmail}`
                   }
                 ]
               },
@@ -228,7 +249,7 @@ const handler = async (req: Request): Promise<Response> => {
                 type: "section",
                 text: {
                   type: "mrkdwn",
-                  text: `*Message:*\n${messageText}`
+                  text: `*Message:*\n${slackMessage}`
                 }
               }
             ]
@@ -248,8 +269,23 @@ const handler = async (req: Request): Promise<Response> => {
       console.log("SLACK_WEBHOOK_URL not configured, skipping Slack notification");
     }
 
+    // Fail closed when the Resend key is missing: log server-side, generic
+    // error to the client (no key leakage).
+    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+    if (!RESEND_API_KEY) {
+      console.error("RESEND_API_KEY is not configured");
+      return new Response(
+        JSON.stringify({ error: "Failed to send message. Please try again later." }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+    const resend = new Resend(RESEND_API_KEY);
+
     // Send notification email to team
-    const teamEmail = await resend.emails.send({
+    await resend.emails.send({
       from: "Pine Lake Robotics <onboarding@resend.dev>",
       to: ["rabia.ahmed.us@gmail.com"],
       subject: `New Contact Form Message from ${safeName}`,
@@ -262,10 +298,10 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Team notification sent:", teamEmail);
+    console.log("Team notification sent");
 
     // Send confirmation email to user
-    const confirmEmail = await resend.emails.send({
+    await resend.emails.send({
       from: "Pine Lake Robotics <onboarding@resend.dev>",
       to: [email],
       subject: "We received your message!",
@@ -279,11 +315,11 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Confirmation email sent:", confirmEmail);
+    console.log("Confirmation email sent");
 
 
     return new Response(
-      JSON.stringify({ success: true, teamEmail, confirmEmail }),
+      JSON.stringify({ success: true }),
       {
         status: 200,
         headers: {

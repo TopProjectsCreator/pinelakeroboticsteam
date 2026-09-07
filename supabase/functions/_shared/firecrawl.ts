@@ -9,9 +9,17 @@ export const LIMIT_PER_DAY = 40;
 export const MAX_TOOL_CALLS_PER_MESSAGE = 3;
 
 export function getClientIp(req: Request): string {
+  // Prefer the LAST x-forwarded-for entry (appended closest to our infra by a
+  // trusted proxy). The FIRST entry is client-claimed and trivially spoofable,
+  // so it must not be trusted for rate-limit identity.
   const fwd = req.headers.get("x-forwarded-for");
-  if (fwd) return fwd.split(",")[0].trim();
-  return req.headers.get("cf-connecting-ip") ?? "unknown";
+  if (fwd) {
+    const parts = fwd.split(",").map((s) => s.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
+  const cf = req.headers.get("cf-connecting-ip")?.trim();
+  if (cf) return cf;
+  return "unknown";
 }
 
 export async function hashIp(ip: string): Promise<string> {
@@ -249,10 +257,16 @@ export async function runFirecrawlTool(
         return `Unknown tool: ${name}`;
     }
 
-    await recordUsage(ipHash, name);
     return out;
   } catch (err) {
     console.error(`firecrawl tool ${name} failed:`, err);
     return `The web tool failed: ${err instanceof Error ? err.message : "unknown error"}`;
+  } finally {
+    // Record usage on ALL attempts (success, validation error, or failure) so
+    // per-IP caps actually bite. The rate-limited early return above stays
+    // unrecorded since that call was never executed.
+    try {
+      await recordUsage(ipHash, name);
+    } catch { /* usage accounting must not mask the tool result */ }
   }
 }

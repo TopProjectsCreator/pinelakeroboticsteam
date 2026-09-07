@@ -3,8 +3,19 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 import { brokeredPreviewStorage } from './previewAuthStorage';
 
+// Required environment variables (set in .env / hosting dashboard):
+//   VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY
+// Fail fast with a clear message instead of a white-screen crash from
+// createClient() receiving undefined values.
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
+  throw new Error(
+    "Missing Supabase configuration: VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY must be set. " +
+    "Add them to your .env file or hosting environment variables and restart the dev server."
+  );
+}
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";

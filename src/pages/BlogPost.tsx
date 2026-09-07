@@ -16,7 +16,9 @@ const BlogPost = () => {
   } = useParams();
   const {
     data: post,
-    isLoading
+    isLoading,
+    isError,
+    refetch
   } = useQuery({
     queryKey: ["blog-post", id],
     queryFn: async () => {
@@ -96,6 +98,27 @@ const BlogPost = () => {
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-3/4" />
+            </div>
+          </div>
+        </div>
+      </div>;
+  }
+  if (isError) {
+    return <div className="min-h-screen py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-3xl font-orbitron font-bold mb-4">Failed to Load Post</h1>
+            <p className="text-muted-foreground mb-8">We couldn't load this blog post. Please check your connection and try again.</p>
+            <div className="flex items-center justify-center gap-4">
+              <Button onClick={() => refetch()}>
+                Try Again
+              </Button>
+              <Link to="/blog">
+                <Button variant="outline">
+                  <ArrowLeft className="mr-2 w-4 h-4" />
+                  Back to Blog
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

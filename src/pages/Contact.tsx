@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,6 +6,17 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { ContactRichTextEditor } from "@/components/ContactRichTextEditor";
 import { z } from "zod";
+
+// Strip rich-text HTML tags to count plain-text length (consistent with the
+// server-side 5000-character text limit).
+const stripRichTextToPlain = (html: string): string => {
+  try {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    return (doc.body.textContent ?? "").trim();
+  } catch {
+    return html.replace(/<[^>]*>/g, "").trim();
+  }
+};
 
 const contactSchema = z.object({
   name: z.string()
@@ -18,9 +29,9 @@ const contactSchema = z.object({
     .email("Please enter a valid email address")
     .max(255, "Email must be less than 255 characters"),
   message: z.string()
-    .trim()
     .min(1, "Message is required")
-    .max(5000, "Message must be less than 5000 characters"),
+    .refine((html) => stripRichTextToPlain(html).length >= 1, "Message is required")
+    .refine((html) => stripRichTextToPlain(html).length <= 5000, "Message must be less than 5000 characters"),
 });
 
 const Contact = () => {
@@ -28,10 +39,12 @@ const Contact = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const inFlightRef = useRef(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (inFlightRef.current) return;
     
     // Validate inputs with zod
     const validationResult = contactSchema.safeParse({ name, email, message });
@@ -47,6 +60,7 @@ const Contact = () => {
     }
 
     setIsLoading(true);
+    inFlightRef.current = true;
 
     try {
       const { data, error } = await supabase.functions.invoke('send-contact-email', {
@@ -54,8 +68,10 @@ const Contact = () => {
       });
 
       if (error) {
-        // Handle rate limiting specifically
-        if (error.message?.includes("Too many requests")) {
+        // Handle rate limiting specifically (map Edge errors to generic copy).
+        const status = (error as { status?: number; context?: { status?: number } }).status
+          ?? (error as { context?: { status?: number } }).context?.status;
+        if (error.message?.includes("Too many requests") || status === 429) {
           toast({
             title: "Too Many Requests",
             description: "Please wait before submitting another message.",
@@ -78,11 +94,12 @@ const Contact = () => {
       console.error("Error sending message:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to send message. Please try again.",
+        description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsLoading(false);
+      inFlightRef.current = false;
     }
   };
 
@@ -124,11 +141,12 @@ const Contact = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>Message</Label>
+              <Label htmlFor="message">Message</Label>
               <ContactRichTextEditor
                 value={message}
                 onChange={setMessage}
                 maxLength={5000}
+                id="message"
               />
             </div>
 

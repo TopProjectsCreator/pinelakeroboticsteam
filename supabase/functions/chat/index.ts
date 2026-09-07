@@ -17,7 +17,58 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages } = await req.json();
+    // Reject oversized bodies (>256KB) before parsing.
+    const rawBody = await req.text();
+    if (new TextEncoder().encode(rawBody).length > 256 * 1024) {
+      return new Response(JSON.stringify({ error: "Request body too large." }), {
+        status: 413,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(rawBody);
+    } catch {
+      return new Response(JSON.stringify({ error: "Invalid JSON body." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const incoming = (parsed as { messages?: unknown })?.messages;
+    if (!Array.isArray(incoming)) {
+      return new Response(JSON.stringify({ error: "messages must be an array." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // Role injection guard: keep ONLY plain user messages with string content.
+    // Drops system/tool/assistant smuggling (incl. tool_calls), then caps at
+    // the 20 newest messages and 12k total chars (truncating oldest first).
+    const MAX_HISTORY_MESSAGES = 20;
+    const MAX_HISTORY_CHARS = 12000;
+    const sanitized: Array<{ role: "user"; content: string }> = [];
+    for (const m of incoming) {
+      if (!m || typeof m !== "object") continue;
+      const r = m as Record<string, unknown>;
+      if (r.role !== "user" || typeof r.content !== "string") continue;
+      if (!r.content) continue;
+      sanitized.push({ role: "user", content: r.content });
+    }
+    const capped = sanitized.slice(-MAX_HISTORY_MESSAGES);
+    let totalChars = capped.reduce((n, m) => n + m.content.length, 0);
+    while (totalChars > MAX_HISTORY_CHARS && capped.length > 0) {
+      const excess = totalChars - MAX_HISTORY_CHARS;
+      const oldest = capped[0];
+      if (oldest.content.length <= excess) {
+        totalChars -= oldest.content.length;
+        capped.shift();
+      } else {
+        // Trim the oldest message from the front, keeping its most recent tail.
+        oldest.content = oldest.content.slice(excess);
+        totalChars = MAX_HISTORY_CHARS;
+      }
+    }
+    const messages = capped;
     const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
@@ -347,19 +398,26 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
     const ipHash = await hashIp(getClientIp(req));
     const toolsAvailable = !!Deno.env.get("FIRECRAWL_API_KEY") && !(await checkRateLimit(ipHash));
 
+    const OPENROUTER_HEADERS: Record<string, string> = {
+      "Content-Type": "application/json",
+      "HTTP-Referer": "https://pinelakeroboticsteam.lovable.app/",
+      "X-Title": "Wolverines FTC 23442 Assistant",
+    };
+
     async function toolCompletion(withTools: boolean) {
       if (OPENROUTER_API_KEY) {
         try {
           const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
             method: "POST",
             headers: {
+              ...OPENROUTER_HEADERS,
               Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-              "Content-Type": "application/json",
             },
             body: JSON.stringify({
               model: "google/gemma-4-31b-it:free",
               models: ["google/gemma-4-31b-it:free", "openrouter/free"],
               messages: chatMessages,
+              max_tokens: 1024,
               ...(withTools ? { tools: firecrawlTools, tool_choice: "auto" } : {}),
             }),
           });
@@ -384,12 +442,23 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
         console.error("Lovable tool phase error:", r.status, await r.text());
         return null;
       }
-      return await r.json();
+      try {
+        return await r.json();
+      } catch (err) {
+        console.error("Lovable tool phase returned non-JSON:", err);
+        return null;
+      }
     }
 
     if (toolsAvailable) {
       let used = 0;
+      let crawlsUsed = 0;
+      let searchReturnedUsable = false;
+      let rateLimited = false;
+      // Search-first: web_crawl is capped at 1 per message and only runs when
+      // no earlier web_search returned anything usable.
       for (let round = 0; round < MAX_TOOL_CALLS_PER_MESSAGE && used < MAX_TOOL_CALLS_PER_MESSAGE; round++) {
+        if (rateLimited) break;
         const data = await toolCompletion(true);
         const msg = data?.choices?.[0]?.message;
         const calls = msg?.tool_calls;
@@ -399,18 +468,104 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
 
         for (const call of calls.slice(0, MAX_TOOL_CALLS_PER_MESSAGE - used)) {
           used++;
+          const toolName = call.function?.name ?? "";
           let args: Record<string, unknown> = {};
           try {
             args = JSON.parse(call.function?.arguments ?? "{}");
           } catch { /* ignore malformed args */ }
-          const result = await runFirecrawlTool(call.function?.name ?? "", args, ipHash);
+          let result: string;
+          if (toolName === "web_crawl") {
+            if (crawlsUsed >= 1 || searchReturnedUsable) {
+              result = "Skipped: web_crawl is limited to 1 per message and only runs when web_search returned nothing usable. Prefer web_search or web_scrape.";
+            } else {
+              crawlsUsed++;
+              result = await runFirecrawlTool(toolName, args, ipHash);
+            }
+          } else {
+            result = await runFirecrawlTool(toolName, args, ipHash);
+            if (
+              toolName === "web_search" &&
+              !result.startsWith("Rate limited") &&
+              !result.startsWith("The web tool failed") &&
+              result !== "No results found."
+            ) {
+              searchReturnedUsable = true;
+            }
+          }
           chatMessages.push({
             role: "tool",
             tool_call_id: call.id,
             content: result,
           } as never);
+          if (result.startsWith("Rate limited")) {
+            // Stop the whole tool loop: further calls would burn budget and
+            // hammer a limited API. (break, not continue.)
+            rateLimited = true;
+            break;
+          }
         }
       }
+    }
+
+    // Translate upstream mid-stream error chunks (e.g. `data: {"error": ...}`)
+    // into a terminal client-handleable `data: {"error": "..."}` event instead
+    // of letting the client render a blank bubble, then end the stream.
+    function toClientStream(upstream: ReadableStream<Uint8Array> | null): ReadableStream<Uint8Array> {
+      if (!upstream) return new ReadableStream({ start(c) { c.close(); } });
+      const reader = upstream.getReader();
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder();
+      let buf = "";
+      let terminated = false;
+      return new ReadableStream<Uint8Array>({
+        async pull(controller) {
+          if (terminated) {
+            controller.close();
+            return;
+          }
+          const { done, value } = await reader.read();
+          if (done) {
+            if (buf) controller.enqueue(encoder.encode(buf));
+            controller.close();
+            return;
+          }
+          buf += decoder.decode(value, { stream: true });
+          const out: string[] = [];
+          let idx: number;
+          while ((idx = buf.indexOf("\n")) !== -1) {
+            const line = buf.slice(0, idx);
+            buf = buf.slice(idx + 1);
+            const t = line.endsWith("\r") ? line.slice(0, -1) : line;
+            if (t.startsWith("data:")) {
+              const payload = t.slice(5).trim();
+              if (payload && payload !== "[DONE]") {
+                try {
+                  const p = JSON.parse(payload) as Record<string, unknown>;
+                  if (p && p.error) {
+                    const err = p.error as unknown;
+                    const msg = typeof err === "string"
+                      ? err
+                      : typeof (err as Record<string, unknown>)?.message === "string"
+                        ? String((err as Record<string, unknown>).message)
+                        : "Upstream error";
+                    if (out.length) controller.enqueue(encoder.encode(out.join("")));
+                    controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: msg })}\n\n`));
+                    terminated = true;
+                    try { await reader.cancel(); } catch { /* ignore */ }
+                    controller.close();
+                    return;
+                  }
+                } catch { /* not JSON — pass through untouched */ }
+              }
+            }
+            out.push(line + "\n");
+          }
+          if (out.length) controller.enqueue(encoder.encode(out.join("")));
+        },
+        async cancel() {
+          try { await reader.cancel(); } catch { /* ignore */ }
+        },
+      });
     }
 
     let response: Response | null = null;
@@ -422,13 +577,14 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
         const orResp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
           headers: {
+            ...OPENROUTER_HEADERS,
             Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             model: "google/gemma-4-31b-it:free",
             models: ["google/gemma-4-31b-it:free", "openrouter/free"],
             messages: chatMessages,
+            max_tokens: 1024,
             stream: true,
           }),
         });
@@ -488,8 +644,13 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
       response = lovableResp;
     }
 
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    return new Response(toClientStream(response.body), {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "X-Accel-Buffering": "no",
+      },
     });
   } catch (e) {
     // Log detailed error server-side for debugging

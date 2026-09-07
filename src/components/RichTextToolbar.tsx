@@ -28,9 +28,19 @@ export const RichTextToolbar = ({ editor }: RichTextToolbarProps) => {
 
   const addLink = () => {
     const url = window.prompt("Enter URL");
-    if (url) {
-      editor.chain().focus().setLink({ href: url }).run();
+    if (!url) {
+      return;
     }
+    const trimmedUrl = url.trim();
+    // Only allow safe protocols to prevent javascript:/data: XSS.
+    if (!/^https?:\/\//i.test(trimmedUrl) && !/^mailto:/i.test(trimmedUrl)) {
+      return;
+    }
+    editor
+      .chain()
+      .focus()
+      .setLink({ href: trimmedUrl, target: "_blank", rel: "noopener noreferrer" })
+      .run();
   };
 
   return (
