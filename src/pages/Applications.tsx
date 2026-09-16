@@ -112,6 +112,7 @@ function AttachmentIcon({ kind }: { kind: AttachmentKind }) {  const cls = "h-4 
 
 const FN_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/application-interview`;
 const GRADES = ["6th", "7th", "8th"];
+const APPLICATION_LOCK_KEY = "applications:submitted";
 
 const Applications = () => {
   const { toast } = useToast();
@@ -122,6 +123,7 @@ const Applications = () => {
   const [closing, setClosing] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submissionLocked, setSubmissionLocked] = useState(false);
   const [submitFailed, setSubmitFailed] = useState(false);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
@@ -152,10 +154,24 @@ const Applications = () => {
 
   useEffect(() => {
     mountedRef.current = true;
+    try {
+      setSubmissionLocked(localStorage.getItem(APPLICATION_LOCK_KEY) === "1");
+    } catch {
+      setSubmissionLocked(false);
+    }
     return () => {
       mountedRef.current = false;
     };
   }, []);
+
+  const lockSubmission = () => {
+    setSubmissionLocked(true);
+    try {
+      localStorage.setItem(APPLICATION_LOCK_KEY, "1");
+    } catch {
+      // ignore storage write failures
+    }
+  };
 
   useEffect(() => {
     questionRef.current = question;
@@ -237,6 +253,7 @@ const Applications = () => {
       });
       await call({ action: "submit", transcript: sanitized, attachments: capped });
       setSubmitFailed(false);
+      lockSubmission();
       setStage("done");
     } catch (e) {
       setSubmitFailed(true);
@@ -261,6 +278,10 @@ const Applications = () => {
   const startInterview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (inFlightRef.current) return;
+    if (submissionLocked) {
+      toast({ title: "Application already submitted.", variant: "destructive" });
+      return;
+    }
     if (!applicant.name.trim() || !applicant.grade || !applicant.email.trim()) {
       toast({ title: "Please fill in all three fields.", variant: "destructive" });
       return;
@@ -431,25 +452,6 @@ const Applications = () => {
     refreshPreviews();
   };
 
-  const resetToIntro = () => {
-    setStage("intro");
-    setTranscript([]);
-    setQuestion(null);
-    setClosing("");
-    setAttachments([]);
-    setSelectedPath(null);
-    setText("");
-    setMulti([]);
-    setBuckets({});
-    setUrlInput("");
-    setSubmitFailed(false);
-    setLoading(false);
-    setSubmitting(false);
-    setImporting(false);
-    inFlightRef.current = false;
-    uploadGateRef.current = false;
-  };
-
   if (stage === "done") {
     return (
       <div className="container mx-auto px-4 py-24 max-w-2xl text-center">
@@ -459,10 +461,8 @@ const Applications = () => {
         <p className="text-muted-foreground mt-4">
           We'll review your application and reach out at <span className="text-foreground">{applicant.email}</span>.
         </p>
+        <p className="text-muted-foreground mt-2">Only one application submission is allowed.</p>
         <div className="mt-8 flex items-center justify-center gap-3">
-          <Button variant="outline" onClick={resetToIntro}>
-            Start over
-          </Button>
           <Button variant="outline" asChild>
             <a href="/">Home</a>
           </Button>
@@ -483,50 +483,61 @@ const Applications = () => {
 
       {stage === "intro" && (
         <Card className="p-6">
-          <form onSubmit={startInterview} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                value={applicant.name}
-                onChange={(e) => setApplicant({ ...applicant, name: e.target.value })}
-                placeholder="Your full name"
-                required
-              />
+          {submissionLocked ? (
+            <div className="space-y-3 text-center">
+              <p className="text-sm text-muted-foreground">
+                This browser has already submitted an application. Only one submission is allowed.
+              </p>
+              <Button variant="outline" asChild>
+                <a href="/">Home</a>
+              </Button>
             </div>
-
-            <div className="space-y-2">
-              <Label>Grade</Label>
-              <div className="flex gap-2">
-                {GRADES.map((g) => (
-                  <Button
-                    key={g}
-                    type="button"
-                    variant={applicant.grade === g ? "default" : "outline"}
-                    onClick={() => setApplicant({ ...applicant, grade: g })}
-                  >
-                    {g}
-                  </Button>
-                ))}
+          ) : (
+            <form onSubmit={startInterview} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={applicant.name}
+                  onChange={(e) => setApplicant({ ...applicant, name: e.target.value })}
+                  placeholder="Your full name"
+                  required
+                />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">School Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={applicant.email}
-                onChange={(e) => setApplicant({ ...applicant, email: e.target.value })}
-                placeholder="user@issaquah.wednet.edu"
-                required
-              />
-            </div>
+              <div className="space-y-2">
+                <Label>Grade</Label>
+                <div className="flex gap-2">
+                  {GRADES.map((g) => (
+                    <Button
+                      key={g}
+                      type="button"
+                      variant={applicant.grade === g ? "default" : "outline"}
+                      onClick={() => setApplicant({ ...applicant, grade: g })}
+                    >
+                      {g}
+                    </Button>
+                  ))}
+                </div>
+              </div>
 
-            <Button type="submit" className="w-full">
-              Start my interview
-            </Button>
-          </form>
+              <div className="space-y-2">
+                <Label htmlFor="email">School Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={applicant.email}
+                  onChange={(e) => setApplicant({ ...applicant, email: e.target.value })}
+                  placeholder="user@issaquah.wednet.edu"
+                  required
+                />
+              </div>
+
+              <Button type="submit" className="w-full">
+                Start my interview
+              </Button>
+            </form>
+          )}
         </Card>
       )}
 
