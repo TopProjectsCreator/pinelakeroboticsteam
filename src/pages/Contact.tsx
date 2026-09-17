@@ -23,7 +23,7 @@ const contactSchema = z.object({
     .trim()
     .min(1, "Name is required")
     .max(100, "Name must be less than 100 characters")
-    .regex(/^[a-zA-Z\s\-'\.]+$/, "Name can only contain letters, spaces, hyphens, apostrophes, and periods"),
+    .regex(/^[a-zA-Z\s\-'.]+$/, "Name can only contain letters, spaces, hyphens, apostrophes, and periods"),
   email: z.string()
     .trim()
     .email("Please enter a valid email address")
@@ -90,7 +90,7 @@ const Contact = () => {
       setName("");
       setEmail("");
       setMessage("");
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error sending message:", error);
       toast({
         title: "Error",

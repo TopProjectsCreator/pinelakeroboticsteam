@@ -33,7 +33,7 @@ const contactSchema = z.object({
     .trim()
     .min(1, "Name is required")
     .max(100, "Name must be less than 100 characters")
-    .regex(/^[a-zA-Z\s\-'\.]+$/, "Name contains invalid characters"),
+    .regex(/^[a-zA-Z\s\-'.]+$/, "Name contains invalid characters"),
   email: z.string()
     .trim()
     .email("Invalid email address")
@@ -328,7 +328,7 @@ const handler = async (req: Request): Promise<Response> => {
         },
       }
     );
-  } catch (error: any) {
+  } catch (error) {
     // Log detailed error server-side for debugging
     console.error("Error in send-contact-email function:", error);
     
