@@ -501,7 +501,7 @@ const Applications = () => {
           {applicationsClosed ? (
             <div className="space-y-3 text-center">
               <p className="text-sm text-muted-foreground">
-                Applications closed on September 16, 2026 at 10:00 PM PST.
+                Applications close on September 17, 2026 at 4:00 PM PST.
               </p>
               <Button variant="outline" asChild>
                 <a href="/">Home</a>
