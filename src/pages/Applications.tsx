@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import DragDropSort from "@/components/DragDropSort";
 import { Loader2, Send, CheckCircle2, Upload, Image, FileText, Film, Music, Paperclip, Link, X } from "lucide-react";
+import { applicationsAreClosed } from "@/lib/applicationsDeadline";
 
 type QuestionType = "text" | "choice" | "multi" | "categorize" | "dragdrop" | "file";
 
@@ -125,6 +126,7 @@ const Applications = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submissionLocked, setSubmissionLocked] = useState(false);
   const [submitFailed, setSubmitFailed] = useState(false);
+  const [applicationsClosed, setApplicationsClosed] = useState(false);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [selectedPath, setSelectedPath] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState("");
@@ -154,6 +156,7 @@ const Applications = () => {
 
   useEffect(() => {
     mountedRef.current = true;
+    setApplicationsClosed(applicationsAreClosed());
     try {
       setSubmissionLocked(localStorage.getItem(APPLICATION_LOCK_KEY) === "1");
     } catch {
@@ -229,6 +232,13 @@ const Applications = () => {
   };
 
   const submitApplication = async (finalTranscript: Turn[]) => {
+    if (applicationsAreClosed()) {
+      setApplicationsClosed(true);
+      setStage("intro");
+      toast({ title: "Applications are now closed.", variant: "destructive" });
+      inFlightRef.current = false;
+      return;
+    }
     lastTranscriptRef.current = finalTranscript;
     setSubmitting(true);
     setSubmitFailed(false);
@@ -278,6 +288,11 @@ const Applications = () => {
   const startInterview = async (e: React.FormEvent) => {
     e.preventDefault();
     if (inFlightRef.current) return;
+    if (applicationsAreClosed()) {
+      setApplicationsClosed(true);
+      toast({ title: "Applications are now closed.", variant: "destructive" });
+      return;
+    }
     if (submissionLocked) {
       toast({ title: "Application already submitted.", variant: "destructive" });
       return;
@@ -483,7 +498,16 @@ const Applications = () => {
 
       {stage === "intro" && (
         <Card className="p-6">
-          {submissionLocked ? (
+          {applicationsClosed ? (
+            <div className="space-y-3 text-center">
+              <p className="text-sm text-muted-foreground">
+                Applications closed on September 16, 2026 at 10:00 PM PST.
+              </p>
+              <Button variant="outline" asChild>
+                <a href="/">Home</a>
+              </Button>
+            </div>
+          ) : submissionLocked ? (
             <div className="space-y-3 text-center">
               <p className="text-sm text-muted-foreground">
                 This browser has already submitted an application. Only one submission is allowed.
