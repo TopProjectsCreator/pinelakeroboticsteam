@@ -85,8 +85,8 @@ const Wiki = () => {
         }
 
         const wikiPages = (data.tree || [])
-          .filter((node: any) => node.type === 'blob' && node.path.endsWith('.md'))
-          .map((node: any) => ({
+          .filter((node) => node.type === 'blob' && node.path.endsWith('.md'))
+          .map((node) => ({
             name: node.path.replace('.md', '').replace(/-/g, ' '),
             path: node.path.replace('.md', ''),
           }))

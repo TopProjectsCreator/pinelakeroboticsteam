@@ -228,7 +228,7 @@ export async function runFirecrawlTool(
           limit: clampNum(args.limit, 1, 10, 5),
           scrapeOptions: { formats: ["markdown"], onlyMainContent: true },
         });
-        const pages = (data?.data ?? []) as Array<Record<string, any>>;
+        const pages = (data?.data ?? []) as Array<Record<string, unknown>>;
         if (pages.length) {
           out = pages
             .slice(0, 10)
