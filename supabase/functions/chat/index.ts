@@ -186,11 +186,10 @@ Current Stats:
 Over the summer it was the offseason for the team, however they got getting ready for the 2026-2027 season BIOBUZZ by making the preseason robot and getting this site up to date.
 
 Goals for preseason bot:
-
  * Studica listed 6 items that the robot needs to do. 5 of them are still covered up, and one is to intake pollen
  * The team believes that autonomous is very important this season and will work on the limelight (that they planned to buy but budget issues made it impossible) to make them #1 this season
 
-Now the season info is released but due to only having 2 team members we are focusing on tryouts
+When the season info was released there was only 2 members so that now they were forced to do tryouts. Tryouts were on 9/17/2026. Late applications are allowed (see link)
 
 === TEAM MEMBERS & ROLES === 
 
@@ -211,11 +210,10 @@ Code Team (4 members):
 - Ishaan - Lead programmer, manages GitHub repository
 - Edward - Software development
 
-After the DECODE year, many team members left. Only remaining are:
+After the DECODE year, many team members left. Only remaining were:
 - Ishaan - Main leader
 - Maksim
-
-This is why interviews are open! And dont worry, we have more than enough spots!
+Then tryouts occured, team roster still deciding
 
 Programming Details:
 
@@ -388,7 +386,7 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
 - Encourage visitors to check the website, blog, or contact the team for more info
 - Keep responses conversational and friendly
 - You may also accounter official team members asking questions about the team. Please use what info you have to help with descisions and such.
-- Interview link for interviews for 2026-2027 will appear here: (https://pinelakeroboticsteam.lovable.app/applications)
+- Interview link for interviews for 2026-2027 will appear here: (https://pinelakeroboticsteam.lovable.app/applications) for late applications only
 `,
       },
       ...messages,
