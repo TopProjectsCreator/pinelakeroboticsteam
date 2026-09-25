@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
-import { applicationsAreClosed } from "@/lib/applicationsDeadline";
 import heroImage from "@/assets/robot-hero.jpg";
 import robotDetail from "@/assets/robot-detail.jpg";
 import teamPhoto2025 from "@/assets/team-photo-2025.jpg";
@@ -17,7 +16,6 @@ import teamBuilding from "@/assets/team-building.jpg";
 import teamShopping from "@/assets/team-shopping.jpg";
 
 const Home = () => {
-  const applicationsClosed = applicationsAreClosed();
   const { data: recentPosts = [], isLoading: postsLoading, isError: postsError, refetch: refetchPosts } = useQuery({
     queryKey: ["recent-blog-posts"],
     queryFn: async () => {
@@ -326,17 +324,11 @@ const Home = () => {
                 Contact Us
               </Button>
             </Link>
-            {applicationsClosed ? (
-              <Button size="lg" variant="outline" disabled className="bg-transparent border-primary-foreground text-primary-foreground opacity-100">
-                Applications Closed
+            <Link to="/applications">
+              <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                Apply to Join
               </Button>
-            ) : (
-              <Link to="/applications">
-                <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                  Apply to Join
-                </Button>
-              </Link>
-            )}
+            </Link>
           </div>
         </div>
       </section>
