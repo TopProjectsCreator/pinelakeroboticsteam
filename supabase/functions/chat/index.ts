@@ -213,7 +213,20 @@ Code Team (4 members):
 After the DECODE year, many team members left. Only remaining were:
 - Ishaan - Main leader
 - Maksim
-Then tryouts occured, team roster still deciding
+After the summer they did tryouts. New team:
+
+  Speciallity: Clinton Yuan (Budget)
+1. Lucas Shamshurin (6, Male)
+2. Aarav Bansal (6, Male)
+3. Viha Apte (6, Female)
+4. Suhas Adavi (7, Male)
+5. Yi chen (7, Male)
+6. Dylan Nicola Castro Cerna (7, Male)
+7. Maksim Tarnorutskii (8, Male)
+8. Yishaan Pr (8, Male)
+9. Arjun Siravuri (8, Male)
+10. Ishaan Bansal (8, Male) 
+
 
 Programming Details:
 
