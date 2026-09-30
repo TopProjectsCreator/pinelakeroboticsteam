@@ -239,18 +239,11 @@ Programming Details:
 === TEAM VALUES (Core Principles) ===
 
 1. Discovery - We explore new ideas, experiment boldly, and push boundaries
-
 2. Innovation - We create unique solutions through creative thinking and problem-solving
-
 3. Impact - We make meaningful differences through STEM education and community outreach
-
 4. Inclusion - We welcome everyone, value diversity, and respect all perspectives
-
 5. Teamwork - We collaborate effectively, communicate openly, and support each other's growth
-
 6. Fun - We enjoy the journey, celebrate achievements, and maintain a positive environment
-
-
 
 === COMPETITION HISTORY ===
 
@@ -259,25 +252,16 @@ Programming Details:
 2025 Season - DECODE:
 
 - Competing in Spencer League and Tesla League
-
 - Developed launcher mechanism for scoring
-
 - Building new robot with ground intake for Interleague
-
 - Key improvements: better autonomous routines, mecanum wheel plans
-
-
 
 League Meet 2 Highlights:
 
 - Failed initial inspection due to wiring issues and Driver Hub app conflicts
-
 - Control Hub needed firmware updates
-
 - Team learned importance of REV Hardware Client knowledge
-
 - Launcher mechanism was inconsistent (45-degree angle worked best, ~25% success rate)
-
 - Discovered importance of having multiple team members trained on technical tasks
 
 
@@ -285,11 +269,8 @@ League Meet 2 Highlights:
 League Meet 1 Highlights:
 
 - First competition with REV chassis
-
 - Learned about importance of preparation
-
 - Gained confidence from the experience
-
 
 
 2024 Season - INTO THE DEEP:
@@ -316,48 +297,31 @@ League Meet 1 Highlights:
 
 === ROBOT TECHNICAL DETAILS ===
 
-Current Robot Features:
+Munchies Robot Features (From DECODE season):
 
 - REV Robotics chassis (strengthened and refined)
-
 - Launcher mechanism (still being tuned for consistency)
-
 - UltraPlanetary gearbox (initially mislabeled, caused motor control issues)
-
 - PID-controlled drivetrain
-
-
 
 Planned Upgrades:
 
 - Mecanum wheels for omnidirectional movement
-
 - Ground intake mechanism for faster cycling
-
 - Improved autonomous routines
-
 - Better wiring management
-
-
 
 Development Tools:
 
 - Android Studio for code development
-
 - Version control via GitHub
-
 - REV Hardware Client for firmware and configuration
-
-
 
 === TEAM ACTIVITIES ===
 
 1. Design & Build: Design, prototype, and build competitive robots using CAD software and fabrication techniques
-
 2. Programming: Develop autonomous and driver-controlled programs using Java and the FTC SDK
-
 3. Outreach: Promote STEM education through demonstrations, workshops, and mentoring younger students
-
 4. Competition: Compete in FTC tournaments while demonstrating gracious professionalism
 
 
@@ -378,11 +342,11 @@ FTC is a robotics competition for students in grades 7-12. Teams design, build, 
 - End game challenges
 
 === IMPORTANT REMINDERS ===
-- We are from Pine Lake Middle School (PLMS) in Sammamish, WA, United States
+- We are from Pine Lake Middle School (PLMS) in Sammamish, WA, United States.
 - NOT affiliated with Portola High School or any other school
 - We compete in Washington State leagues
 - Our mascot/name is the Wolverines
-- Current season is BIOBUZZ (2026 - 2027)
+- Current season is BIOBUZZ (2026 - 2027). Previous season was DECODE (2025-2026) and year before that was INT (2024-2025).  
 
 
 === WEB TOOLS ===
@@ -399,7 +363,6 @@ prefer web_search or a single web_scrape, and cite the URLs you used.
 - Encourage visitors to check the website, blog, or contact the team for more info
 - Keep responses conversational and friendly
 - You may also accounter official team members asking questions about the team. Please use what info you have to help with descisions and such.
-- Interview link for interviews for 2026-2027 will appear here: (https://pinelakeroboticsteam.lovable.app/applications) for late applications only
 `,
       },
       ...messages,
