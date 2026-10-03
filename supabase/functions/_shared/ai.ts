@@ -1,7 +1,5 @@
 // Shared AI helper: chained providers, first success wins.
-// Order: OpenRouter -> Kilo (stepfun/step-3.7-flash:free, anon) ->
-// Zen chat (mimo-v2.5-free, keyless+UA) -> Zen responses
-// (muse-spark-1.3-contributor-free) -> Lovable gateway (paid, last).
+// Order: OpenRouter -> Lovable gateway (only fallback).
 // Non-streaming, returns the assistant text. Throws if all fail.
 
 export interface ChatMessage {
@@ -76,72 +74,6 @@ async function tryOpenRouter(messages: ChatMessage[], json: boolean | undefined,
   }
 }
 
-async function tryKilo(messages: ChatMessage[], signal: AbortSignal): Promise<string> {
-  // Anonymous: NO Authorization header (free models only).
-  const resp = await fetch("https://api.kilo.ai/api/gateway/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: chatBody("stepfun/step-3.7-flash:free", messages, true),
-    signal,
-  });
-  try {
-    return await readChatText(resp, "Kilo");
-  } catch (err) {
-    console.error("Kilo error:", err);
-    throw err;
-  }
-}
-
-async function tryZenChat(messages: ChatMessage[], signal: AbortSignal): Promise<string> {
-  const resp = await fetch("https://opencode.ai/zen/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer public",
-      "Content-Type": "application/json",
-      "User-Agent": "opencode/1.18.16",
-    },
-    body: chatBody("mimo-v2.5-free", messages, true),
-    signal,
-  });
-  try {
-    return await readChatText(resp, "Zen chat");
-  } catch (err) {
-    console.error("Zen chat error:", err);
-    throw err;
-  }
-}
-
-async function tryZenResponses(messages: ChatMessage[], signal: AbortSignal): Promise<string> {
-  const input = messages.map((m) => `${m.role}: ${m.content}`).join("\n\n");
-  const resp = await fetch("https://opencode.ai/zen/v1/responses", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer public",
-      "Content-Type": "application/json",
-      "User-Agent": "opencode/1.18.16",
-    },
-    body: JSON.stringify({
-      model: "muse-spark-1.3-contributor-free",
-      input,
-      max_output_tokens: 1000,
-      reasoning: { effort: "minimal" },
-    }),
-    signal,
-  });
-  if (!resp.ok) {
-    console.error("Zen responses error:", resp.status);
-    throw new Error(`Zen responses error: ${resp.status}`);
-  }
-  const data = await resp.json();
-  const msg = (data?.output ?? []).find((o: { type: string }) => o?.type === "message");
-  const text = msg?.content?.[0]?.text;
-  if (typeof text !== "string" || !text.trim()) {
-    console.error("Zen responses returned empty content");
-    throw new Error("Zen responses returned empty content");
-  }
-  return text;
-}
-
 async function tryLovable(messages: ChatMessage[], json: boolean | undefined, signal: AbortSignal): Promise<string> {
   const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
   if (!LOVABLE_API_KEY) throw new Error("No AI provider is configured.");
@@ -189,9 +121,6 @@ export async function callAI(messages: ChatMessage[], opts: { json?: boolean } =
   );
   const attempts: Array<{ label: string; run: (signal: AbortSignal) => Promise<string> }> = [
     { label: "OpenRouter", run: (s) => tryOpenRouter(messages, opts.json, s) },
-    { label: "Kilo", run: (s) => tryKilo(messages, s) },
-    { label: "Zen chat", run: (s) => tryZenChat(messages, s) },
-    { label: "Zen responses", run: (s) => tryZenResponses(messages, s) },
     { label: "Lovable", run: (s) => tryLovable(messages, opts.json, s) },
   ];
   let lastErr: unknown = new Error("No AI provider is configured.");
