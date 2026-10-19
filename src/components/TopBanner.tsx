@@ -1,5 +1,5 @@
 const LAUNCH = Date.parse("2026-10-21T00:00:00Z");
-const URL = "https://robotics-interview-dashboard.onrender.com/";
+const URL = "https://roboticsdashboard.onrender.com/";
 
 const TopBanner = () => {
   const live = Date.now() >= LAUNCH;
